@@ -35,29 +35,31 @@ The application is the subject of a college DevOps module assignment. The primar
 | **CI/CD** | Jenkins | Declarative Pipeline as Code ([`Jenkinsfile`](Jenkinsfile)) | Implemented ([Task 8](docs/task-08-pipeline-as-code-and-server-deployment.md)) |
 | **Containerisation** | Docker | Multi-stage Dockerfile packaging | Planned (Task 10+) |
 | **Configuration** | Ansible | Playbooks for automated provisioning | Planned (Task 12+) |
-| **E2E Testing** | Selenium WebDriver | Automated critical journey testing | Planned (Task 9+) |
+| **E2E Testing** | Selenium WebDriver | 6 Automated Browser Tests (Selenium 4) | Implemented ([Task 9](docs/task-09-selenium-test-design-and-local-execution.md)) |
 
 ---
 
-## Current Development Stage: Task 8 â€” Pipeline as Code and Server Deployment
+## Current Development Stage: Task 9 — Selenium Test Design and Local Execution
 
 - **Active Branch:** `main`
+- **Selenium E2E Suite:** [`ClaimGuardSeleniumE2ETest`](src/test/java/com/claimguard/dashboard/selenium/ClaimGuardSeleniumE2ETest.java) implementing 6 automated browser test journeys across Dashboard, Claims Queue, Form Intake, Validation, and Forensic Review using Selenium WebDriver 4.19.1 and Google Chrome via Selenium Manager.
 - **Pipeline as Code:** Root [`Jenkinsfile`](Jenkinsfile) implementing Declarative Pipeline stages (Initialize, Verify Environment, Run Automated Tests, Package Application, Server Deployment Standby).
-- **Task 8 Documentation:** [`docs/task-08-pipeline-as-code-and-server-deployment.md`](docs/task-08-pipeline-as-code-and-server-deployment.md) covering pipeline architecture, Jenkins job setup, verification evidence, and safe Windows staging procedures.
+- **Task 9 Documentation:** [`docs/task-09-selenium-test-design-and-local-execution.md`](docs/task-09-selenium-test-design-and-local-execution.md) covering test architecture, execution steps, actual test results (6/6 passed), viva questions, and evidence checklist.
 - **Implemented Work:**
   - Standard Spring Boot 3.3.4 project layout using Java 21 and Maven.
   - Relational entities: `Claim`, `ClaimDocument`, `SuspiciousIndicator`, `ReviewHistory`.
   - Spring Data JPA repositories and embedded H2 database configuration.
   - Deterministic heuristic rule evaluation engine (`IndicatorRuleEngine`) evaluating 5 business rules:
-    - `RUL-AMT-01`: High Value Claim Threshold (â‰¥ â‚¹1,50,000)
+    - `RUL-AMT-01`: High Value Claim Threshold (≥ ₹1,50,000)
     - `RUL-TIM-01`: Delayed Incident Reporting (> 48 hours)
-    - `RUL-MTR-04`: Parts Benchmark Discrepancy (> â‚¹1,00,000)
+    - `RUL-MTR-04`: Parts Benchmark Discrepancy (> ₹1,00,000)
     - `RUL-DUP-01`: Duplicate Claim Submission Detection
     - `RUL-DOC-02`: Missing Mandatory Supporting Documents
   - REST API controllers for Claims, Reviews, and Health monitoring.
   - Synthetic data seeder initializing 5 realistic test claims covering diverse lifecycle states (`SUBMITTED`, `UNDER_REVIEW`, `MORE_INFO_REQUIRED`, `APPROVED`, `REJECTED`).
   - Adapted frontend static web console (`index.html`, `claims.html`, `submit.html`, `review.html`) with localized SVG branding and responsive async REST integration.
-  - Comprehensive unit and integration test suite passing 100% of tests (11 tests).
+  - Comprehensive unit and integration test suite (11 unit/MockMvc tests passing).
+  - Dedicated Selenium E2E test suite (6 browser tests passing against live server).
 
 ---
 
@@ -66,6 +68,7 @@ The application is the subject of a college DevOps module assignment. The primar
 ### Prerequisites
 - **Java Development Kit (JDK):** OpenJDK 21 LTS installed (`JAVA_HOME` configured).
 - **Maven:** Version 3.9+ or use the included Maven Wrapper (`.\mvnw.cmd`).
+- **Browser (for E2E tests):** Google Chrome installed at standard path.
 
 ### 1. Build and Run Tests
 From the project root:
@@ -88,6 +91,16 @@ java -jar target/claimguard-dashboard-1.0.0-SNAPSHOT.jar
 ```
 
 The server starts by default on port `8080`.
+
+### 4. Run Selenium E2E Browser Tests
+With the application running locally on port 8080:
+```powershell
+.\mvnw.cmd test -Dtest=ClaimGuardSeleniumE2ETest
+```
+To run in headed (visible browser) mode:
+```powershell
+.\mvnw.cmd test -Dtest=ClaimGuardSeleniumE2ETest -Dselenium.headless=false
+```
 
 ---
 
@@ -119,7 +132,7 @@ The server starts by default on port `8080`.
 | Task 06 | Code Review and Branch Merging | **Completed** (`docs/task-06-mvp-completion-and-git-collaboration.md`, PR #1 merged) |
 | Task 07 | Jenkins Pipeline Setup (CI Build & Test) | **Completed** (Freestyle job `ClaimGuard-CI` verified) |
 | Task 08 | Pipeline as Code and Server Deployment | **Completed** ([`Jenkinsfile`](Jenkinsfile), [`docs/task-08-pipeline-as-code-and-server-deployment.md`](docs/task-08-pipeline-as-code-and-server-deployment.md)) |
-| Task 09 | Selenium End-to-End Automated Testing | Planned |
+| Task 09 | Selenium End-to-End Automated Testing | **Completed** ([`docs/task-09-selenium-test-design-and-local-execution.md`](docs/task-09-selenium-test-design-and-local-execution.md)) |
 | Task 10 | Docker Container Packaging | Planned |
 | Task 11 | Jenkins + Docker Automated Pipeline | Planned |
 | Task 12 | Ansible Configuration Management | Planned |
@@ -128,4 +141,4 @@ The server starts by default on port `8080`.
 
 ---
 
-*ClaimGuard â€” Claim Fraud Review Dashboard | College DevOps Assignment | Raj Yadav | 2026*
+*ClaimGuard — Claim Fraud Review Dashboard | College DevOps Assignment | Raj Yadav | 2026*

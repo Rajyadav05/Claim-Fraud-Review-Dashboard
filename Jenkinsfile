@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script {
                     currentBuild.displayName = "#${env.BUILD_NUMBER} - ClaimGuard Main"
-                    currentBuild.description = "Pipeline as Code execution for ClaimGuard Dashboard"
+                    currentBuild.description = "Continuous Testing Pipeline for ClaimGuard Dashboard"
                 }
                 echo "============================================================"
                 echo "Starting Build #${env.BUILD_NUMBER}"
@@ -49,26 +49,32 @@ pipeline {
                         echo [ERROR] javac -version check failed.
                         exit /b 1
                     )
-                    echo [SUCCESS] Java 21 environment verified.
+                    echo Checking Chrome installation:
+                    if exist "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" (
+                        echo [SUCCESS] Chrome binary detected at C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe
+                    ) else (
+                        echo [WARN] Chrome not found at standard path. Selenium Manager will attempt automated resolution.
+                    )
+                    echo [SUCCESS] Build and test environment verified.
                 '''
             }
         }
 
-        stage('Run Automated Tests') {
+        stage('Run Unit & Integration Tests') {
             steps {
                 bat '''
                     @echo off
                     echo ============================================================
-                    echo [STAGE: Run Automated Tests]
+                    echo [STAGE: Run Unit & Integration Tests]
                     echo ============================================================
                     set "JAVA_HOME=C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.12.101-hotspot"
                     set "PATH=%JAVA_HOME%\\bin;%PATH%"
-                    call mvnw.cmd clean test
+                    call mvnw.cmd clean test -Dtest="!*Selenium*"
                     if errorlevel 1 (
-                        echo [ERROR] Maven clean test execution failed.
+                        echo [ERROR] Unit and integration test suite failed.
                         exit /b 1
                     )
-                    echo [SUCCESS] All automated tests executed successfully.
+                    echo [SUCCESS] Unit and integration tests executed successfully (11 tests).
                 '''
             }
             post {
@@ -87,7 +93,7 @@ pipeline {
                     echo ============================================================
                     set "JAVA_HOME=C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.12.101-hotspot"
                     set "PATH=%JAVA_HOME%\\bin;%PATH%"
-                    call mvnw.cmd package
+                    call mvnw.cmd package -DskipTests
                     if errorlevel 1 (
                         echo [ERROR] Maven packaging failed.
                         exit /b 1
@@ -103,6 +109,31 @@ pipeline {
             }
         }
 
+        stage('Run Selenium E2E Tests') {
+            steps {
+                bat '''
+                    @echo off
+                    echo ============================================================
+                    echo [STAGE: Run Selenium E2E Tests]
+                    echo ============================================================
+                    set "JAVA_HOME=C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.12.101-hotspot"
+                    set "PATH=%JAVA_HOME%\\bin;%PATH%"
+
+                    powershell -ExecutionPolicy Bypass -File scripts\\run-e2e-suite.ps1 -Port 8080 -JarPath target\\claimguard-dashboard-1.0.0-SNAPSHOT.jar -Headless $true
+                    if errorlevel 1 (
+                        echo [ERROR] Selenium E2E browser tests failed or application did not start.
+                        exit /b 1
+                    )
+                    echo [SUCCESS] Selenium E2E tests executed successfully (6 tests).
+                '''
+            }
+            post {
+                always {
+                    junit testResults: '**/target/surefire-reports/TEST-*Selenium*.xml', allowEmptyResults: false
+                }
+            }
+        }
+
         stage('Server Deployment Standby') {
             steps {
                 bat '''
@@ -110,12 +141,13 @@ pipeline {
                     echo ============================================================
                     echo [STAGE: Server Deployment Standby]
                     echo ============================================================
-                    echo [INFO] Build and packaging stages completed successfully.
+                    echo [INFO] Unit, integration, packaging, and E2E browser tests
+                    echo        completed successfully.
                     echo [INFO] Automated deployment to remote server or container
                     echo        environment is on standby pending infrastructure
-                    echo        provisioning in Tasks 10-12 (Docker, Ansible).
+                    echo        provisioning in Tasks 11-13 (Docker, Ansible).
                     echo [INFO] Refer to docs/task-08-pipeline-as-code-and-server-deployment.md
-                    echo        for the verified Windows staging and deployment guide.
+                    echo        and docs/task-10-continuous-testing-in-jenkins.md.
                     echo ============================================================
                 '''
             }
@@ -126,6 +158,7 @@ pipeline {
         success {
             echo '============================================================'
             echo '[PIPELINE SUCCESS] ClaimGuard Pipeline completed successfully!'
+            echo '[PIPELINE SUCCESS] Verified: 11 Unit/MockMvc Tests + 6 Selenium E2E Tests'
             echo '[PIPELINE SUCCESS] Archived artifact: target/claimguard-dashboard-1.0.0-SNAPSHOT.jar'
             echo '============================================================'
         }

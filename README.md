@@ -32,19 +32,25 @@ The application is the subject of a college DevOps module assignment. The primar
 | **UI Reference** | Google Stitch | 4 Reference Screens under `docs/stitch-export/` | Preserved Ground Truth |
 | **Testing** | JUnit 5 + Mockito + MockMvc | 11 Automated Tests | Implemented |
 | **Version Control** | Git + GitHub | Branch: `main` (feature merged via PR #1) | Implemented |
-| **CI/CD** | Jenkins | Declarative Pipeline as Code ([`Jenkinsfile`](Jenkinsfile)) | Implemented ([Task 8](docs/task-08-pipeline-as-code-and-server-deployment.md)) |
-| **Containerisation** | Docker | Multi-stage Dockerfile packaging | Planned (Task 10+) |
-| **Configuration** | Ansible | Playbooks for automated provisioning | Planned (Task 12+) |
-| **E2E Testing** | Selenium WebDriver | 6 Automated Browser Tests (Selenium 4) | Implemented ([Task 9](docs/task-09-selenium-test-design-and-local-execution.md)) |
+| **CI/CD** | Jenkins | Continuous Testing Pipeline as Code ([`Jenkinsfile`](Jenkinsfile)) | Implemented ([Task 8](docs/task-08-pipeline-as-code-and-server-deployment.md), [Task 10](docs/task-10-continuous-testing-in-jenkins.md)) |
+| **Containerisation** | Docker | Multi-stage Dockerfile packaging | Planned (Task 11+) |
+| **Configuration** | Ansible | Playbooks for automated provisioning | Planned (Task 13+) |
+| **E2E Testing** | Selenium WebDriver | 6 Automated Browser Tests + Continuous Runner | Implemented ([Task 9](docs/task-09-selenium-test-design-and-local-execution.md), [Task 10](docs/task-10-continuous-testing-in-jenkins.md)) |
 
 ---
 
-## Current Development Stage: Task 9 — Selenium Test Design and Local Execution
+## Current Development Stage: Task 10 — Continuous Testing in Jenkins
 
 - **Active Branch:** `main`
-- **Selenium E2E Suite:** [`ClaimGuardSeleniumE2ETest`](src/test/java/com/claimguard/dashboard/selenium/ClaimGuardSeleniumE2ETest.java) implementing 6 automated browser test journeys across Dashboard, Claims Queue, Form Intake, Validation, and Forensic Review using Selenium WebDriver 4.19.1 and Google Chrome via Selenium Manager.
-- **Pipeline as Code:** Root [`Jenkinsfile`](Jenkinsfile) implementing Declarative Pipeline stages (Initialize, Verify Environment, Run Automated Tests, Package Application, Server Deployment Standby).
-- **Task 9 Documentation:** [`docs/task-09-selenium-test-design-and-local-execution.md`](docs/task-09-selenium-test-design-and-local-execution.md) covering test architecture, execution steps, actual test results (6/6 passed), viva questions, and evidence checklist.
+- **Continuous Testing Pipeline:** Root [`Jenkinsfile`](Jenkinsfile) implementing Declarative Pipeline stages:
+  1. `Initialize` (display metadata and workspace logging)
+  2. `Verify Environment` (JDK 21, compiler, and Chrome installation detection)
+  3. `Run Unit & Integration Tests` (11 unit/MockMvc tests via `mvnw.cmd clean test -Dtest="!*Selenium*"`)
+  4. `Package Application` (assembly of fat JAR with `-DskipTests` to prevent duplicate test runs, artifact verification, and archiving)
+  5. `Run Selenium E2E Tests` (automated background app launch, `/api/health` polling, headless Chrome execution, and guaranteed shutdown)
+  6. `Server Deployment Standby` (gated deployment standby for future container/Ansible stages)
+- **Automated E2E Runner:** [`scripts/run-e2e-suite.ps1`](scripts/run-e2e-suite.ps1) managing the end-to-end lifecycle: stale port cleanup, Spring Boot background execution, health probe verification, headless Selenium test invocation, and guaranteed port release in `finally`.
+- **Task 10 Documentation:** [`docs/task-10-continuous-testing-in-jenkins.md`](docs/task-10-continuous-testing-in-jenkins.md) covering pipeline architecture, Windows Session 0 headless strategy, local verification evidence (17/17 tests passing), troubleshooting, and viva defense questions.
 - **Implemented Work:**
   - Standard Spring Boot 3.3.4 project layout using Java 21 and Maven.
   - Relational entities: `Claim`, `ClaimDocument`, `SuspiciousIndicator`, `ReviewHistory`.
@@ -92,7 +98,7 @@ java -jar target/claimguard-dashboard-1.0.0-SNAPSHOT.jar
 
 The server starts by default on port `8080`.
 
-### 4. Run Selenium E2E Browser Tests
+### 4. Run Selenium E2E Browser Tests Manually
 With the application running locally on port 8080:
 ```powershell
 .\mvnw.cmd test -Dtest=ClaimGuardSeleniumE2ETest
@@ -100,6 +106,12 @@ With the application running locally on port 8080:
 To run in headed (visible browser) mode:
 ```powershell
 .\mvnw.cmd test -Dtest=ClaimGuardSeleniumE2ETest -Dselenium.headless=false
+```
+
+### 5. Run Automated E2E Continuous Testing Runner
+To execute the automated lifecycle runner (starts application, verifies health, runs headless Selenium tests, and stops application):
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\run-e2e-suite.ps1
 ```
 
 ---
@@ -133,10 +145,10 @@ To run in headed (visible browser) mode:
 | Task 07 | Jenkins Pipeline Setup (CI Build & Test) | **Completed** (Freestyle job `ClaimGuard-CI` verified) |
 | Task 08 | Pipeline as Code and Server Deployment | **Completed** ([`Jenkinsfile`](Jenkinsfile), [`docs/task-08-pipeline-as-code-and-server-deployment.md`](docs/task-08-pipeline-as-code-and-server-deployment.md)) |
 | Task 09 | Selenium End-to-End Automated Testing | **Completed** ([`docs/task-09-selenium-test-design-and-local-execution.md`](docs/task-09-selenium-test-design-and-local-execution.md)) |
-| Task 10 | Docker Container Packaging | Planned |
-| Task 11 | Jenkins + Docker Automated Pipeline | Planned |
-| Task 12 | Ansible Configuration Management | Planned |
-| Task 13 | Full CI/CD Pipeline Demonstration | Planned |
+| Task 10 | Continuous Testing in Jenkins | **Completed** ([`docs/task-10-continuous-testing-in-jenkins.md`](docs/task-10-continuous-testing-in-jenkins.md)) |
+| Task 11 | Docker Container Packaging | Planned |
+| Task 12 | Jenkins + Docker Automated Pipeline | Planned |
+| Task 13 | Ansible Configuration Management | Planned |
 | Task 14 | Project Retrospective and Viva Preparation | Planned |
 
 ---

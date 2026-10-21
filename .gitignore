@@ -1,0 +1,40 @@
+
+# Java and Maven build output
+target/
+*.class
+*.jar
+*.war
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.local
+secrets/
+credentials.json
+
+# Logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Test and coverage output
+coverage/
+test-results/

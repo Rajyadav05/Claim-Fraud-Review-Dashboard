@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container-high": "#e6e8ea", "inverse-primary": "#b7c4ff", "on-primary": "#ffffff", "error-container": "#ffdad6", "surface-bright": "#f7f9fb", "surface-container": "#eceef0", "on-error-container": "#93000a", "tertiary-fixed": "#d3e4fe", "inverse-on-surface": "#eff1f3", "tertiary-container": "#4d5d73", "secondary": "#565e74", "tertiary": "#36455b", "secondary-fixed-dim": "#bec6e0", "secondary-container": "#dae2fd", "surface-tint": "#2151da", "background": "#f7f9fb", "on-tertiary": "#ffffff", "surface-container-highest": "#e0e3e5", "primary": "#0037b0", "primary-fixed-dim": "#b7c4ff", "on-primary-container": "#cad3ff", "on-error": "#ffffff", "surface-container-lowest": "#ffffff", "on-secondary-fixed-variant": "#3f465c", "on-tertiary-container": "#c5d6f0", "on-surface": "#191c1e", "secondary-fixed": "#dae2fd", "outline": "#747686", "surface": "#f7f9fb", "surface-dim": "#d8dadc", "on-surface-variant": "#434655", "surface-variant": "#e0e3e5", "inverse-surface": "#2d3133", "on-primary-fixed-variant": "#0039b5", "primary-container": "#1d4ed8", "surface-container-low": "#f2f4f6", "primary-fixed": "#dce1ff", "outline-variant": "#c4c5d7", "on-secondary-container": "#5c647a", "on-tertiary-fixed": "#0b1c30", "on-primary-fixed": "#001551", "on-background": "#191c1e", "on-secondary-fixed": "#131b2e", "tertiary-fixed-dim": "#b7c8e1", "on-secondary": "#ffffff", "on-tertiary-fixed-variant": "#38485d", "error": "#ba1a1a" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "1.5rem", "space-xl": "1.5rem", "gutter": "1rem", "space-2xl": "2rem", "margin-lg": "2rem", "space-sm": "0.5rem", "space-lg": "1rem", "space-xs": "0.25rem", "gutter-lg": "1.5rem", "space-md": "0.75rem" }, "fontFamily": { "body-md": ["Inter"], "tabular-data": ["Inter"], "label-md": ["Inter"], "headline-xl": ["Inter"], "body-sm": ["Inter"], "body-lg": ["Inter"], "code-audit": ["Inter"], "label-sm": ["Inter"], "headline-lg": ["Inter"], "headline-md": ["Inter"] }, "fontSize": { "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "tabular-data": ["13px", { "lineHeight": "18px", "fontWeight": "500" }], "label-md": ["13px", { "lineHeight": "16px", "fontWeight": "500" }], "headline-xl": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "body-lg": ["15px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "400" }], "code-audit": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }], "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } };</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-on-secondary-fixed text-surface-container-lowest z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm bg-on-secondary-fixed"><img alt="ClaimGuard Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1X86gHvuCqDwK5ZIe94wKyMcqmeiI13uzm7ovGPaaMKfNH4EP9agMvpRnXHpK0g1ZyXhbS67KHz1QIaM_zu5FWY-jtpblrJgru0-V1E8PSSMYlbhDRjsezfBQiP22ysZstNJSOm_kAZEd4R10pqLwAAMDePhYAWHo2X6kD6RPd_YrDyU58KedeyndJanotigU-5Q6r8GzZrbqTLsgW5jftARkHlhcfAAxJQKKxu7NPNT-lhgkA_HXWUF-I"/><div class="flex flex-col"><span class="font-headline-md text-headline-md text-surface-container-lowest leading-none">ClaimGuard</span><span class="font-label-sm text-label-sm text-secondary-fixed-dim uppercase tracking-wider mt-1">Enterprise Fraud Ops</span></div></div><nav class="flex flex-col gap-1 px-space-md py-space-lg" data-active-classes="bg-primary-container text-on-primary font-bold"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="font-label-md text-label-md">Dashboard</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" data-path="all-claims" href="#"><span class="material-symbols-outlined text-[20px]">folder_open</span><span class="font-label-md text-label-md">All Claims</span></a><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg transition-colors bg-primary-container text-on-primary font-bold" data-path="submit-claim" href="#"><span class="material-symbols-outlined text-[20px]">add_circle</span><span class="font-label-md text-label-md">Submit Claim</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" data-path="pending-reviews" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[20px]">schedule</span><span class="font-label-md text-label-md">Pending Reviews</span></div><span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">18</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" data-path="review-history" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span class="font-label-md text-label-md">Review History</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" data-path="reports" href="#"><span class="material-symbols-outlined text-[20px]">bar_chart</span><span class="font-label-md text-label-md">Reports</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" data-path="settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-label-md text-label-md">Settings</span></a></nav></div><div class="p-space-md m-space-sm rounded-xl bg-on-tertiary-fixed flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTA0N7G4shIrBOwmVm5GgmWSHDB51g_NEpv8uom5Zi6WF4ZkgT__vCyidl89k88AWchhYhGDIAhtpHl8eOj_j1BwscrWSVQAe55YAMKOae5RqEMT1ql5tW7_1S_JnAx05AvzrqXM0k753PmkThFxjGd-kXXZawnact-wLmDj0ngAmStsM14lpWAwSG3MmBwA6H9EZgQVTJKNnGxjIbJXVG_bT2e8qdk9yoQBcsMiksU6ziNrLQwkvv"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-surface-tint"></span></div><div class="flex flex-col"><span class="font-label-md text-label-md text-surface-container-lowest leading-tight">Priya Sharma</span><span class="font-label-sm text-label-sm text-secondary-fixed-dim">Senior Claims Analyst</span></div></div><button class="text-secondary-fixed-dim hover:text-surface-container-lowest p-1 rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">logout</span></button></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-xl flex-1 max-w-2xl"><div class="relative w-full max-w-md"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span><input class="w-full h-9 pl-9 pr-4 rounded-lg bg-surface-container-low text-on-surface placeholder:text-outline font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Search claims by ID (CLM-...), claimant, or policy number... (⌘K)" type="text"/></div></div><div class="flex items-center gap-space-lg"><div class="hidden xl:flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container text-on-surface-variant font-code-audit text-code-audit"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span><span>DevOps Build v2.4.1 • Jenkins #142</span></div><button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span></button><a class="inline-flex items-center gap-space-xs h-9 px-space-md rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md transition-colors" data-path="submit-claim" href="#"><span class="material-symbols-outlined text-[18px]">add</span><span>Submit New Claim</span></a><div class="flex items-center gap-space-xs pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTA0N7G4shIrBOwmVm5GgmWSHDB51g_NEpv8uom5Zi6WF4ZkgT__vCyidl89k88AWchhYhGDIAhtpHl8eOj_j1BwscrWSVQAe55YAMKOae5RqEMT1ql5tW7_1S_JnAx05AvzrqXM0k753PmkThFxjGd-kXXZawnact-wLmDj0ngAmStsM14lpWAwSG3MmBwA6H9EZgQVTJKNnGxjIbJXVG_bT2e8qdk9yoQBcsMiksU6ziNrLQwkvv"/><span class="material-symbols-outlined text-outline text-[18px]">expand_more</span></div></div></header><main class="relative pt-16 w-full min-h-screen bg-background"><div class="flex flex-col w-full">
+<div class="p-space-lg lg:p-space-xl flex flex-col gap-space-xl max-w-7xl mx-auto w-full pb-32">
+<!-- Top Command Strip & Context -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-secondary">
+<span class="hover:text-primary transition-colors cursor-pointer">Claims</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface font-semibold">New Claim Submission</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface">Submit New Insurance Claim</h1>
+<p class="font-body-md text-body-md text-secondary max-w-3xl">
+          Enter claimant details, incident information, and attach mandatory supporting documents for real-time automated fraud triage and operational review.
+        </p>
+</div>
+<div class="flex items-center gap-space-md self-start md:self-auto">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-code-audit text-code-audit">
+<span class="w-2 h-2 rounded-full bg-surface-tint animate-pulse"></span>
+<span>Draft Mode • Auto-saved 1 min ago</span>
+</div>
+</div>
+</div>
+<!-- Stepper Pipeline Indicator -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Step 1 (Active) -->
+<div class="flex items-center gap-space-md p-space-sm rounded-lg bg-secondary-container/40">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-label-md text-label-md shrink-0 shadow-sm">
+            1
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Step 01</span>
+<span class="font-label-md text-label-md text-on-surface truncate font-semibold">Claimant & Policy</span>
+</div>
+<span class="material-symbols-outlined text-primary text-[18px] ml-auto shrink-0">edit_note</span>
+</div>
+<!-- Step 2 (Active/In Progress) -->
+<div class="flex items-center gap-space-md p-space-sm rounded-lg bg-surface-container-low">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-label-md text-label-md shrink-0">
+            2
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Step 02</span>
+<span class="font-label-md text-label-md text-on-surface truncate font-medium">Incident Details</span>
+</div>
+<span class="material-symbols-outlined text-outline text-[18px] ml-auto shrink-0">pending</span>
+</div>
+<!-- Step 3 (Active Documents) -->
+<div class="flex items-center gap-space-md p-space-sm rounded-lg bg-surface-container-low">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-secondary flex items-center justify-center font-label-md text-label-md shrink-0">
+            3
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Step 03</span>
+<span class="font-label-md text-label-md text-on-surface truncate font-medium">Supporting Evidence</span>
+</div>
+<span class="material-symbols-outlined text-outline text-[18px] ml-auto shrink-0">attach_file</span>
+</div>
+<!-- Step 4 (Upcoming) -->
+<div class="flex items-center gap-space-md p-space-sm rounded-lg bg-surface-container-low opacity-75">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-outline flex items-center justify-center font-label-md text-label-md shrink-0">
+            4
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Step 04</span>
+<span class="font-label-md text-label-md text-secondary truncate">Review & Submit</span>
+</div>
+<span class="material-symbols-outlined text-outline text-[18px] ml-auto shrink-0">lock</span>
+</div>
+</div>
+</div>
+<!-- Main Form Architecture (Split Workbench Layout) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- Left Column: Form Intake Modules (8 cols) -->
+<form class="lg:col-span-8 flex flex-col gap-space-xl" id="claim-submission-form">
+<!-- SECTION A: Claimant Information Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg lg:p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-secondary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">person</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Section A • Claimant & Policy</h2>
+<p class="font-body-sm text-body-sm text-secondary">Verify identity against national policy registries</p>
+</div>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm">
+              KYC Synced
+            </span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Full Name -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="claimantName">Claimant Full Name <span class="text-error">*</span></label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">badge</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition-all" id="claimantName" placeholder="e.g. Rahul Sundaram" required="" type="text" value="Rahul Sundaram"/>
+</div>
+</div>
+<!-- Policy Number with Live Validation Indicator -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface" for="policyNum">Policy ID <span class="text-error">*</span></label>
+<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant bg-tertiary-fixed/60 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[13px] text-primary">verified</span>
+                  Valid active policy
+                </span>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">shield</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-tabular-data text-tabular-data focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition-all font-mono" id="policyNum" placeholder="e.g. POL-2026-7789-MH" required="" type="text" value="POL-2026-7789-MH"/>
+</div>
+</div>
+<!-- Email Address -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="emailAddr">Email Address <span class="text-error">*</span></label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">mail</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition-all" id="emailAddr" placeholder="e.g. rahul.sundaram@example.com" required="" type="email" value="rahul.sundaram@example.com"/>
+</div>
+</div>
+<!-- Contact Number with Fixed Prefix -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="phoneNum">Contact Mobile Number <span class="text-error">*</span></label>
+<div class="flex rounded-lg overflow-hidden bg-surface-container-low focus-within:ring-2 focus-within:ring-primary">
+<span class="px-3 py-2 bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center shrink-0">
+                  +91
+                </span>
+<input class="w-full h-10 px-3 bg-transparent text-on-surface font-body-md text-body-md outline-none" id="phoneNum" placeholder="98765 43210" required="" type="tel" value="98765 43210"/>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION B: Incident & Claim Details -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg lg:p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-secondary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">car_crash</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Section B • Incident Details</h2>
+<p class="font-body-sm text-body-sm text-secondary">Specific incident parameters, valuation, and geospatial markers</p>
+</div>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm font-semibold">
+              SLA Standard Triage
+            </span>
+</div>
+<!-- Claim Type Selection Grid (Motor, Health, Property, Travel) -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface">Claim Category <span class="text-error">*</span></label>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-md" id="claim-category-selector">
+<!-- Motor (Selected) -->
+<div class="cursor-pointer p-space-md rounded-xl bg-primary-container text-on-primary flex flex-col items-center justify-center gap-2 shadow-sm transition-all transform hover:-translate-y-0.5">
+<span class="material-symbols-outlined text-[28px]">directions_car</span>
+<span class="font-label-md text-label-md font-semibold">Motor</span>
+<span class="font-code-audit text-code-audit text-on-primary-container">Auto / Fleet</span>
+</div>
+<!-- Health -->
+<div class="cursor-pointer p-space-md rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container flex flex-col items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[28px] text-secondary">medical_services</span>
+<span class="font-label-md text-label-md">Health</span>
+<span class="font-code-audit text-code-audit text-outline">Clinical / Hosp</span>
+</div>
+<!-- Property -->
+<div class="cursor-pointer p-space-md rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container flex flex-col items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[28px] text-secondary">home_work</span>
+<span class="font-label-md text-label-md">Property</span>
+<span class="font-code-audit text-code-audit text-outline">Fire / Asset</span>
+</div>
+<!-- Travel -->
+<div class="cursor-pointer p-space-md rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container flex flex-col items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[28px] text-secondary">flight_takeoff</span>
+<span class="font-label-md text-label-md">Travel</span>
+<span class="font-code-audit text-code-audit text-outline">Transit / Cargo</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Incident Date with Validation Note -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="incidentDate">Incident Date & Time <span class="text-error">*</span></label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">calendar_today</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition-all" id="incidentDate" required="" type="date" value="2026-10-24"/>
+</div>
+<p class="font-label-sm text-label-sm text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+                Within 30-day reporting window (Compliant)
+              </p>
+</div>
+<!-- Claim Amount (₹) -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="claimAmount">Claim Amount (INR) <span class="text-error">*</span></label>
+<div class="flex rounded-lg overflow-hidden bg-surface-container-low focus-within:ring-2 focus-within:ring-primary">
+<span class="px-3.5 py-2 bg-surface-container-high text-on-surface font-bold text-headline-md flex items-center shrink-0">
+                  ₹
+                </span>
+<input class="w-full h-10 px-3 bg-transparent text-on-surface font-tabular-data text-tabular-data text-base font-semibold outline-none" id="claimAmount" placeholder="e.g. 1,85,000" required="" type="text" value="1,85,000"/>
+</div>
+<p class="font-code-audit text-code-audit text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">info</span>
+                Amounts above ₹5,00,000 trigger secondary senior audit
+              </p>
+</div>
+<!-- Incident Location -->
+<div class="md:col-span-2 flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="incidentLocation">Incident Physical Location <span class="text-error">*</span></label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">location_on</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition-all" id="incidentLocation" placeholder="e.g. Western Express Highway, Andheri East, Mumbai" required="" type="text" value="Western Express Highway, Andheri East, Mumbai"/>
+</div>
+</div>
+<!-- Incident Description -->
+<div class="md:col-span-2 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface" for="incidentDesc">Comprehensive Incident Narrative <span class="text-error">*</span></label>
+<span class="font-code-audit text-code-audit text-outline">Character count: 284 / 2000</span>
+</div>
+<textarea class="w-full p-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition-all resize-y" id="incidentDesc" placeholder="Detailed summary of the event, damages sustained, and sequence of events..." rows="4">Claimant's Honda City (MH 02 EK 9481) was involved in a three-vehicle collision near the Andheri flyover during heavy rain conditions. Front bumper crushed, radiator compromised, headlamp assembly shattered. No pedestrian bodily injuries reported. Local police station logged DDR 492/26.</textarea>
+</div>
+</div>
+</div>
+<!-- SECTION C: Supporting Documents & Forensic Dossier -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg lg:p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-secondary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">upload_file</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Section C • Supporting Documents</h2>
+<p class="font-body-sm text-body-sm text-secondary">Upload police records, telemetry manifests, bills, and high-res photography</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>OCR Scanner Ready</span>
+</div>
+</div>
+<!-- Drag-and-drop file upload zone -->
+<div class="border-2 border-dashed border-primary/40 hover:border-primary bg-primary/5 hover:bg-primary/10 rounded-xl p-space-xl flex flex-col items-center justify-center text-center cursor-pointer transition-colors group">
+<div class="w-12 h-12 rounded-full bg-surface-container-lowest shadow-sm flex items-center justify-center text-primary group-hover:scale-110 transition-transform mb-3">
+<span class="material-symbols-outlined text-[26px]">cloud_upload</span>
+</div>
+<p class="font-headline-md text-headline-md text-on-surface">
+              Drag & drop evidentiary files here, or <span class="text-primary underline">Browse Files</span>
+</p>
+<p class="font-body-sm text-body-sm text-secondary max-w-lg mt-1">
+              Accepted formats: PDF, JPG, PNG • Max file size: 15MB per file • Mandatory: Repair Estimate / Hospital Bill & Incident Report
+            </p>
+</div>
+<!-- Missing Document Validation Banner -->
+<div class="bg-secondary-container/50 rounded-xl p-space-md flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm text-secondary">
+<span class="material-symbols-outlined text-[20px]">assignment_late</span>
+<p class="font-body-sm text-body-sm">
+<strong class="font-semibold text-on-surface">Notice:</strong> Optional third-party damage receipt has not been attached. If claiming third-party liability indemnity, attach within 72 hours.
+              </p>
+</div>
+<button class="px-3 py-1 rounded-lg bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm hover:bg-surface-container transition-colors shrink-0" type="button">
+              Attach Receipt
+            </button>
+</div>
+<!-- Uploaded Files Dossier List -->
+<div class="flex flex-col gap-space-sm">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Uploaded Documents (3/3 Required)</span>
+<!-- File Item 1 -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex items-center justify-between gap-space-md transition-all hover:bg-surface-container">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-lowest text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">picture_as_pdf</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface truncate font-medium">FIR_Police_Report_Oct24.pdf</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-tint/10 text-primary font-code-audit text-code-audit shrink-0">1.8 MB</span>
+</div>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">100% Processed • SHA-256 Verified</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="p-1.5 rounded-lg text-outline hover:text-primary hover:bg-surface-container-lowest transition-colors" title="Preview file" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-surface-container-lowest transition-colors" title="Remove attachment" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+<!-- File Item 2 -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex items-center justify-between gap-space-md transition-all hover:bg-surface-container">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-lowest text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">receipt_long</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface truncate font-medium">Authorized_Garage_Repair_Estimate.pdf</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-tint/10 text-primary font-code-audit text-code-audit shrink-0">3.2 MB</span>
+</div>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">100% Processed • Line Items Extracted</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="p-1.5 rounded-lg text-outline hover:text-primary hover:bg-surface-container-lowest transition-colors" title="Preview file" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-surface-container-lowest transition-colors" title="Remove attachment" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+<!-- File Item 3 -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex items-center justify-between gap-space-md transition-all hover:bg-surface-container">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-lowest text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">image</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface truncate font-medium">Vehicle_Front_Damage_Photo1.jpg</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-tint/10 text-primary font-code-audit text-code-audit shrink-0">4.1 MB</span>
+</div>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">EXIF Verified • Geo-tag matched to Mumbai</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="p-1.5 rounded-lg text-outline hover:text-primary hover:bg-surface-container-lowest transition-colors" title="Preview file" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-surface-container-lowest transition-colors" title="Remove attachment" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</form>
+<!-- Right Column: Live Audit Preview & Inspection Telemetry (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-space-xl">
+<!-- Live Fraud Heuristics & Scoring Gauge Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Automated Pre-Check</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-audit text-code-audit font-semibold">
+              Live Evaluation
+            </span>
+</div>
+<div class="flex items-center justify-between py-2">
+<div>
+<span class="text-3xl font-bold font-tabular-data text-on-surface">14<span class="text-secondary text-sm font-normal">/100</span></span>
+<p class="font-body-sm text-body-sm text-primary font-medium">Low Fraud Probability</p>
+</div>
+<!-- Progress Radial Micro SVG -->
+<div class="w-14 h-14 relative flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="14, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-code-audit text-code-audit font-bold text-on-surface">98%</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 pt-space-xs">
+<div class="flex items-center justify-between font-body-sm text-body-sm py-1">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">check</span>
+                Policy Active & Premium Current
+              </span>
+<span class="font-tabular-data font-semibold text-on-surface">Pass</span>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm py-1">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">check</span>
+                No Duplicate Claim in 90 Days
+              </span>
+<span class="font-tabular-data font-semibold text-on-surface">Clear</span>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm py-1">
+<span class="text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">check</span>
+                Metadata Timestamp Correlation
+              </span>
+<span class="font-tabular-data font-semibold text-on-surface">Valid</span>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">policy</span>
+<p class="font-label-sm text-label-sm text-secondary">
+              Submission triggers automated assignment to <strong>Desk 4: Motor Physical Damage</strong> under lead investigator triage.
+            </p>
+</div>
+</div>
+<!-- Submission Confirmation Modal Preview Widget -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Workflow Dialog Preview</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">
+              Live Mock
+            </span>
+</div>
+<!-- Realistic Synthetic Confirmation Card Container -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">task_alt</span>
+</div>
+<div class="flex flex-col min-w-0">
+<h3 class="font-headline-md text-headline-md text-on-surface leading-tight">Claim Ready to Queue</h3>
+<span class="font-tabular-data text-tabular-data font-semibold text-primary">Target: CLM-2026-009</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+              Automated validation rules passed with zero critical flags. Claim will be enrolled immediately in the <strong>Triage Workstream</strong>.
+            </p>
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex flex-col gap-1.5">
+<div class="flex justify-between items-center font-code-audit text-code-audit">
+<span class="text-secondary">Assigned Investigator</span>
+<span class="font-medium text-on-surface">Priya Sharma</span>
+</div>
+<div class="flex justify-between items-center font-code-audit text-code-audit">
+<span class="text-secondary">Expected Audit SLA</span>
+<span class="font-medium text-on-surface">&lt; 4 Hours</span>
+</div>
+<div class="flex justify-between items-center font-code-audit text-code-audit">
+<span class="text-secondary">Anti-Fraud Engine</span>
+<span class="font-medium text-primary">Pre-Cleared</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Evidence Reference Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-sm">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Investigator Guidelines</span>
+<h3 class="font-label-md text-label-md text-on-surface font-semibold">Motor Vehicle Physical Damage Intake</h3>
+<p class="font-body-sm text-body-sm text-secondary">
+            Ensure all photographic submissions display accurate time-stamps. In cases involving third-party claims on state highways, police DDR reports are obligatory before financial authorization.
+          </p>
+<div class="flex items-center gap-2 pt-space-xs text-primary font-label-md text-label-md hover:underline cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+<span>View SOP-CLAIM-892 Manual</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Operational Action Bar (Bottom Footer) -->
+<div class="fixed bottom-0 left-64 right-0 bg-surface-container-lowest/95 backdrop-blur-md shadow-lg py-space-md px-space-xl z-30">
+<div class="max-w-7xl mx-auto w-full flex items-center justify-between gap-space-md">
+<!-- Left: Abort / Discard Action -->
+<button class="inline-flex items-center gap-space-xs h-10 px-space-md rounded-lg text-secondary hover:text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+<span>Cancel Submission</span>
+</button>
+<!-- Right: Action Buttons Group -->
+<div class="flex items-center gap-space-md">
+<button class="inline-flex items-center gap-space-xs h-10 px-space-md rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>Save Draft</span>
+</button>
+<button class="inline-flex items-center gap-space-xs h-10 px-space-lg rounded-lg bg-primary-container text-on-primary hover:bg-primary shadow-sm hover:shadow transition-all font-label-md text-label-md font-medium" id="submit-claim-button" type="button">
+<span class="material-symbols-outlined text-[18px]">send</span>
+<span>Submit Claim for Review</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Interactive Submission Success Flyout Dialog (Hidden by Default, toggled via JS) -->
+<div class="fixed inset-0 bg-on-surface/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-space-md" id="submission-success-modal">
+<div class="bg-surface-container-lowest rounded-2xl max-w-lg w-full p-space-xl shadow-2xl flex flex-col gap-space-lg animate-in fade-in zoom-in-95 duration-200">
+<div class="flex items-center justify-between">
+<div class="w-12 h-12 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">check_circle</span>
+</div>
+<button class="p-1 rounded-lg text-outline hover:text-on-surface transition-colors" id="close-modal-button" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider font-semibold">Triage Initialized</span>
+<h2 class="font-headline-xl text-headline-xl text-on-surface">Claim Successfully Submitted!</h2>
+<p class="font-body-md text-body-md text-secondary">
+          Assigned Reference: <strong class="text-on-surface font-tabular-data">CLM-2026-009</strong>. Automated validation rules passed with zero blockers. The case has been routed to the pending reviews triage queue.
+        </p>
+</div>
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col gap-2">
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="text-secondary">Claimant</span>
+<span class="font-semibold text-on-surface">Rahul Sundaram</span>
+</div>
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="text-secondary">Amount Claimed</span>
+<span class="font-semibold text-on-surface font-tabular-data">₹ 1,85,000</span>
+</div>
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="text-secondary">Audit Status</span>
+<span class="px-2 py-0.5 rounded bg-primary-fixed text-on-primary-fixed-variant text-[11px] font-semibold">Assigned: Priya Sharma</span>
+</div>
+</div>
+<div class="flex items-center justify-end gap-space-md pt-space-xs">
+<a class="px-space-md py-2 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors" data-path="dashboard" href="#">
+          Go to Dashboard
+        </a>
+<a class="px-space-lg py-2 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors" data-path="pending-reviews" href="#">
+          View Pending Reviews (19)
+        </a>
+</div>
+</div>
+</div>
+<script>
+    (function() {
+      const submitBtn = document.getElementById('submit-claim-button');
+      const modal = document.getElementById('submission-success-modal');
+      const closeBtn = document.getElementById('close-modal-button');
+
+      if (submitBtn && modal) {
+        submitBtn.addEventListener('click', function() {
+          modal.classList.remove('hidden');
+        });
+      }
+
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', function() {
+          modal.classList.add('hidden');
+        });
+      }
+
+      // Simple category card selector interactivity
+      const categoryCards = document.querySelectorAll('#claim-category-selector > div');
+      categoryCards.forEach(card => {
+        card.addEventListener('click', function() {
+          categoryCards.forEach(c => {
+            c.className = 'cursor-pointer p-space-md rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container flex flex-col items-center justify-center gap-2 transition-all';
+            const icon = c.querySelector('.material-symbols-outlined');
+            if (icon) icon.className = 'material-symbols-outlined text-[28px] text-secondary';
+            const subtitle = c.querySelector('.font-code-audit');
+            if (subtitle) subtitle.className = 'font-code-audit text-code-audit text-outline';
+          });
+          this.className = 'cursor-pointer p-space-md rounded-xl bg-primary-container text-on-primary flex flex-col items-center justify-center gap-2 shadow-sm transition-all transform hover:-translate-y-0.5';
+          const activeIcon = this.querySelector('.material-symbols-outlined');
+          if (activeIcon) activeIcon.className = 'material-symbols-outlined text-[28px]';
+          const activeSub = this.querySelector('.font-code-audit');
+          if (activeSub) activeSub.className = 'font-code-audit text-code-audit text-on-primary-container';
+        });
+      });
+    })();
+  </script>
+</div></main></div></body></html>

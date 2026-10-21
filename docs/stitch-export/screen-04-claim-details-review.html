@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container-high": "#e6e8ea", "inverse-primary": "#b7c4ff", "on-primary": "#ffffff", "error-container": "#ffdad6", "surface-bright": "#f7f9fb", "surface-container": "#eceef0", "on-error-container": "#93000a", "tertiary-fixed": "#d3e4fe", "inverse-on-surface": "#eff1f3", "tertiary-container": "#4d5d73", "secondary": "#565e74", "tertiary": "#36455b", "secondary-fixed-dim": "#bec6e0", "secondary-container": "#dae2fd", "surface-tint": "#2151da", "background": "#f7f9fb", "on-tertiary": "#ffffff", "surface-container-highest": "#e0e3e5", "primary": "#0037b0", "primary-fixed-dim": "#b7c4ff", "on-primary-container": "#cad3ff", "on-error": "#ffffff", "surface-container-lowest": "#ffffff", "on-secondary-fixed-variant": "#3f465c", "on-tertiary-container": "#c5d6f0", "on-surface": "#191c1e", "secondary-fixed": "#dae2fd", "outline": "#747686", "surface": "#f7f9fb", "surface-dim": "#d8dadc", "on-surface-variant": "#434655", "surface-variant": "#e0e3e5", "inverse-surface": "#2d3133", "on-primary-fixed-variant": "#0039b5", "primary-container": "#1d4ed8", "surface-container-low": "#f2f4f6", "primary-fixed": "#dce1ff", "outline-variant": "#c4c5d7", "on-secondary-container": "#5c647a", "on-tertiary-fixed": "#0b1c30", "on-primary-fixed": "#001551", "on-background": "#191c1e", "on-secondary-fixed": "#131b2e", "tertiary-fixed-dim": "#b7c8e1", "on-secondary": "#ffffff", "on-tertiary-fixed-variant": "#38485d", "error": "#ba1a1a" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "1.5rem", "space-xl": "1.5rem", "gutter": "1rem", "space-2xl": "2rem", "margin-lg": "2rem", "space-sm": "0.5rem", "space-lg": "1rem", "space-xs": "0.25rem", "gutter-lg": "1.5rem", "space-md": "0.75rem" }, "fontFamily": { "body-md": ["Inter"], "tabular-data": ["Inter"], "label-md": ["Inter"], "headline-xl": ["Inter"], "body-sm": ["Inter"], "body-lg": ["Inter"], "code-audit": ["Inter"], "label-sm": ["Inter"], "headline-lg": ["Inter"], "headline-md": ["Inter"] }, "fontSize": { "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "tabular-data": ["13px", { "lineHeight": "18px", "fontWeight": "500" }], "label-md": ["13px", { "lineHeight": "16px", "fontWeight": "500" }], "headline-xl": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "body-lg": ["15px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "400" }], "code-audit": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }], "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } };</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-on-secondary-fixed text-surface-container-lowest z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm bg-on-secondary-fixed"><img alt="ClaimGuard Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1X86gHvuCqDwK5ZIe94wKyMcqmeiI13uzm7ovGPaaMKfNH4EP9agMvpRnXHpK0g1ZyXhbS67KHz1QIaM_zu5FWY-jtpblrJgru0-V1E8PSSMYlbhDRjsezfBQiP22ysZstNJSOm_kAZEd4R10pqLwAAMDePhYAWHo2X6kD6RPd_YrDyU58KedeyndJanotigU-5Q6r8GzZrbqTLsgW5jftARkHlhcfAAxJQKKxu7NPNT-lhgkA_HXWUF-I"/><div class="flex flex-col"><span class="font-headline-md text-headline-md text-surface-container-lowest leading-none">ClaimGuard</span><span class="font-label-sm text-label-sm text-secondary-fixed-dim uppercase tracking-wider mt-1">Enterprise Fraud Ops</span></div></div><nav class="flex flex-col gap-1 px-space-md py-space-lg" data-active-classes="bg-primary-container text-on-primary font-bold"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="font-label-md text-label-md">Dashboard</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" data-path="all-claims" href="#"><span class="material-symbols-outlined text-[20px]">folder_open</span><span class="font-label-md text-label-md">All Claims</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" data-path="submit-claim" href="#"><span class="material-symbols-outlined text-[20px]">add_circle</span><span class="font-label-md text-label-md">Submit Claim</span></a><a aria-current="page" class="flex items-center justify-between px-space-md py-space-sm rounded-lg transition-colors bg-primary-container text-on-primary font-bold" data-path="pending-reviews" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[20px]">schedule</span><span class="font-label-md text-label-md">Pending Reviews</span></div><span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">18</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" data-path="review-history" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span class="font-label-md text-label-md">Review History</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" data-path="reports" href="#"><span class="material-symbols-outlined text-[20px]">bar_chart</span><span class="font-label-md text-label-md">Reports</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" data-path="settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-label-md text-label-md">Settings</span></a></nav></div><div class="p-space-md m-space-sm rounded-xl bg-on-tertiary-fixed flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTA0N7G4shIrBOwmVm5GgmWSHDB51g_NEpv8uom5Zi6WF4ZkgT__vCyidl89k88AWchhYhGDIAhtpHl8eOj_j1BwscrWSVQAe55YAMKOae5RqEMT1ql5tW7_1S_JnAx05AvzrqXM0k753PmkThFxjGd-kXXZawnact-wLmDj0ngAmStsM14lpWAwSG3MmBwA6H9EZgQVTJKNnGxjIbJXVG_bT2e8qdk9yoQBcsMiksU6ziNrLQwkvv"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-surface-tint"></span></div><div class="flex flex-col"><span class="font-label-md text-label-md text-surface-container-lowest leading-tight">Priya Sharma</span><span class="font-label-sm text-label-sm text-secondary-fixed-dim">Senior Claims Analyst</span></div></div><button class="text-secondary-fixed-dim hover:text-surface-container-lowest p-1 rounded transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">logout</span></button></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-xl flex-1 max-w-2xl"><div class="relative w-full max-w-md"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span><input class="w-full h-9 pl-9 pr-4 rounded-lg bg-surface-container-low text-on-surface placeholder:text-outline font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Search claims by ID (CLM-...), claimant, or policy number... (⌘K)" type="text"/></div></div><div class="flex items-center gap-space-lg"><div class="hidden xl:flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container text-on-surface-variant font-code-audit text-code-audit"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span><span>DevOps Build v2.4.1 • Jenkins #142</span></div><button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span></button><a class="inline-flex items-center gap-space-xs h-9 px-space-md rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md transition-colors" data-path="submit-claim" href="#"><span class="material-symbols-outlined text-[18px]">add</span><span>Submit New Claim</span></a><div class="flex items-center gap-space-xs pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTA0N7G4shIrBOwmVm5GgmWSHDB51g_NEpv8uom5Zi6WF4ZkgT__vCyidl89k88AWchhYhGDIAhtpHl8eOj_j1BwscrWSVQAe55YAMKOae5RqEMT1ql5tW7_1S_JnAx05AvzrqXM0k753PmkThFxjGd-kXXZawnact-wLmDj0ngAmStsM14lpWAwSG3MmBwA6H9EZgQVTJKNnGxjIbJXVG_bT2e8qdk9yoQBcsMiksU6ziNrLQwkvv"/><span class="material-symbols-outlined text-outline text-[18px]">expand_more</span></div></div></header><main class="relative pt-16 w-full min-h-screen bg-background"><div class="flex flex-col w-full">
+<!-- Operational Sub-Header Bar -->
+<div class="px-space-xl py-space-md bg-surface-container-lowest shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-space-md">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs font-code-audit text-code-audit text-secondary">
+<a class="hover:text-primary transition-colors" href="#">Claims</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="font-semibold text-on-surface">CLM-2026-001</span>
+</div>
+<div class="flex items-center flex-wrap gap-space-md">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Claim Review: CLM-2026-001</h1>
+<div class="flex items-center gap-space-xs">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Under Review
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">priority_high</span>
+            High Priority
+          </span>
+</div>
+</div>
+</div>
+<!-- Action Header Controls -->
+<div class="flex items-center flex-wrap gap-space-sm">
+<button class="h-9 px-3.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-all flex items-center gap-1.5 shadow-sm" onclick="openRequestInfoModal()" type="button">
+<span class="material-symbols-outlined text-[18px] text-secondary">help_outline</span>
+<span>Request More Info</span>
+</button>
+<button class="h-9 px-3.5 rounded-lg bg-error text-on-error hover:opacity-90 font-label-md text-label-md transition-all flex items-center gap-1.5 shadow-sm" onclick="openRejectModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">gavel</span>
+<span>Reject Claim</span>
+</button>
+<button class="h-9 px-4 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md transition-all flex items-center gap-1.5 shadow-sm" onclick="openApproveModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Approve Claim</span>
+</button>
+</div>
+</div>
+<!-- Claim Summary Meta Banner -->
+<div class="px-space-xl py-space-md bg-surface-container-low">
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-space-md items-center">
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Claimant</span>
+<span class="font-body-md text-body-md font-semibold text-on-surface truncate">Rajesh Kumar</span>
+<span class="font-code-audit text-code-audit text-outline truncate">ID: IN-KYC-99120</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Policy</span>
+<span class="font-tabular-data text-tabular-data font-semibold text-on-surface truncate">POL-MH-9482-****</span>
+<span class="font-code-audit text-code-audit text-outline truncate">Auto / Tier-1 Private</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Claim Type</span>
+<span class="font-body-md text-body-md font-medium text-on-surface truncate">Motor Insurance</span>
+<span class="font-code-audit text-code-audit text-primary">Accidental Collision</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Amount Claimed</span>
+<span class="font-headline-md text-headline-md font-bold text-on-surface font-tabular-data">₹1,85,000</span>
+<span class="font-code-audit text-code-audit text-outline">INR Net Gross</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Incident Date</span>
+<span class="font-body-md text-body-md text-on-surface">20 Oct 2026</span>
+<span class="font-code-audit text-code-audit text-outline">Approx. 21:40 IST</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Submitted</span>
+<span class="font-body-md text-body-md text-on-surface">24 Oct 2026</span>
+<span class="font-code-audit text-code-audit text-error font-medium">+4 Days Delay Flag</span>
+</div>
+<div class="flex flex-col min-w-0 col-span-2 sm:col-span-1">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Assigned Reviewer</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-surface-tint"></span>
+<span class="font-body-md text-body-md font-medium text-on-surface truncate">Priya Sharma</span>
+</div>
+<span class="font-code-audit text-code-audit text-secondary truncate">Senior Fraud Analyst</span>
+</div>
+</div>
+</div>
+<!-- Main 2-Column Review Layout (60% / 40%) -->
+<div class="p-space-xl grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- Left Column (60% ~ 7.2 of 12 cols, represented as col-span-7) -->
+<div class="lg:col-span-7 flex flex-col gap-space-xl min-w-0">
+<!-- Card 1: Incident Summary & Claimant Details -->
+<div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b-0">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">directions_car</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Incident Summary & Vehicle Forensics</h2>
+<p class="font-code-audit text-code-audit text-secondary">Verified telematics and claimant statement records</p>
+</div>
+</div>
+<span class="px-2.5 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">Tier: Comprehensive Gold</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md p-space-md rounded-lg bg-surface-container-low">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase">Vehicle Registration</span>
+<p class="font-tabular-data text-tabular-data font-bold text-on-surface mt-0.5">MH-02-CE-8841</p>
+<p class="font-code-audit text-code-audit text-outline">Hyundai Creta SX (O) 2024</p>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase">Accident Location</span>
+<p class="font-body-md text-body-md font-medium text-on-surface mt-0.5">Andheri East, Mumbai</p>
+<p class="font-code-audit text-code-audit text-outline">Near Western Express Highway Junction</p>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase">Contact Credential</span>
+<p class="font-body-md text-body-md font-medium text-on-surface mt-0.5">+91 98201 •••••</p>
+<p class="font-code-audit text-code-audit text-primary">r.kumar@nexuscorp.in</p>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase">Narrative & Impact Analysis</span>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed bg-surface-container-low p-space-md rounded-lg">
+            "Insured vehicle was involved in a low-to-medium speed frontal impact with a stationary concrete divider during wet pavement conditions on Western Express Flyover off-ramp. Airbags did not deploy. Front bumper assembly, radiator grill, and right headlamp cluster sustained structural damage. Vehicle was towed directly to Apex Motors Authorized Service Workshop."
+          </p>
+</div>
+</div>
+<!-- Card 2: Attached Supporting Documents -->
+<div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">attach_file</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Attached Supporting Documents</h2>
+<p class="font-code-audit text-code-audit text-secondary">3 verified evidence files synchronized via S3 Encrypted Store</p>
+</div>
+</div>
+<span class="font-code-audit text-code-audit text-outline">SHA-256 Validated</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Document Row 1 -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-10 h-10 rounded-lg bg-error-container text-on-error-container flex items-center justify-center font-bold text-[13px]">
+                PDF
+              </div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-body-md font-medium text-on-surface truncate">Garage_Estimate_ApexMotors.pdf</span>
+<div class="flex items-center gap-2 font-code-audit text-code-audit text-secondary">
+<span>2.4 MB</span>
+<span>•</span>
+<span class="text-primary font-bold">Claim Quote: ₹1,85,000</span>
+<span>•</span>
+<span>Verified Apex GSTIN</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<button class="px-2.5 py-1.5 rounded-lg bg-surface-container-lowest text-primary hover:bg-primary hover:text-on-primary font-label-sm text-label-sm transition-all flex items-center gap-1 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Preview</span>
+</button>
+<button class="p-1.5 rounded-lg bg-surface-container-lowest text-secondary hover:text-on-surface transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</div>
+<!-- Document Row 2 -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary flex items-center justify-center font-bold text-[13px]">
+                PDF
+              </div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-body-md font-medium text-on-surface truncate">Police_Incident_GD_Entry.pdf</span>
+<div class="flex items-center gap-2 font-code-audit text-code-audit text-secondary">
+<span>840 KB</span>
+<span>•</span>
+<span>Andheri East Station GD #884/26</span>
+<span>•</span>
+<span class="text-outline">No injuries noted</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<button class="px-2.5 py-1.5 rounded-lg bg-surface-container-lowest text-primary hover:bg-primary hover:text-on-primary font-label-sm text-label-sm transition-all flex items-center gap-1 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Preview</span>
+</button>
+<button class="p-1.5 rounded-lg bg-surface-container-lowest text-secondary hover:text-on-surface transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</div>
+<!-- Document Row 3 -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-10 h-10 rounded-lg bg-secondary text-surface-container-lowest flex items-center justify-center font-bold text-[13px]">
+                JPG
+              </div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-body-md font-medium text-on-surface truncate">Vehicle_Damage_Photo_Front.jpg</span>
+<div class="flex items-center gap-2 font-code-audit text-code-audit text-secondary">
+<span>4.1 MB</span>
+<span>•</span>
+<span>EXIF GPS: 19.1136° N, 72.8697° E</span>
+<span>•</span>
+<span>Timestamp matched</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<button class="px-2.5 py-1.5 rounded-lg bg-surface-container-lowest text-primary hover:bg-primary hover:text-on-primary font-label-sm text-label-sm transition-all flex items-center gap-1 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Preview</span>
+</button>
+<button class="p-1.5 rounded-lg bg-surface-container-lowest text-secondary hover:text-on-surface transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3: Document Preview Window Placeholder -->
+<div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">feed</span>
+<span class="font-headline-md text-headline-md text-on-surface">Document Inspection View</span>
+</div>
+<!-- Document Controls -->
+<div class="flex items-center gap-space-xs bg-surface-container-low px-2 py-1 rounded-lg">
+<button class="p-1 rounded text-secondary hover:text-on-surface transition-colors" title="Zoom Out" type="button">
+<span class="material-symbols-outlined text-[18px]">zoom_out</span>
+</button>
+<span class="font-code-audit text-code-audit text-on-surface font-semibold px-1">100%</span>
+<button class="p-1 rounded text-secondary hover:text-on-surface transition-colors" title="Zoom In" type="button">
+<span class="material-symbols-outlined text-[18px]">zoom_in</span>
+</button>
+<span class="w-px h-3.5 bg-outline-variant mx-1"></span>
+<span class="font-code-audit text-code-audit text-secondary">Page 1 of 3</span>
+<button class="p-1 rounded text-secondary hover:text-on-surface transition-colors" title="Next Page" type="button">
+<span class="material-symbols-outlined text-[18px]">navigate_next</span>
+</button>
+</div>
+</div>
+<!-- Rendered Visual Document Preview Canvas -->
+<div class="w-full bg-surface-container-high rounded-xl p-space-lg flex flex-col items-center justify-center min-h-[380px] relative overflow-hidden">
+<div class="w-full max-w-xl bg-surface-container-lowest rounded-lg p-space-xl shadow-md flex flex-col gap-space-md">
+<!-- Simulated Invoice Header -->
+<div class="flex items-start justify-between pb-space-sm bg-surface-container-low p-space-md rounded-lg">
+<div class="flex flex-col">
+<span class="font-headline-sm font-bold text-on-surface tracking-tight">APEX MOTORS WORKSHOP LTD</span>
+<span class="font-code-audit text-code-audit text-secondary">Authorized Accident & Bodywork Repair Centre</span>
+<span class="font-code-audit text-code-audit text-outline">GSTIN: 27AACCA1029K1Z4 • Andheri West, Mumbai</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-sm text-label-sm font-bold text-primary">ESTIMATE #EST-2026-881</span>
+<span class="font-code-audit text-code-audit text-secondary">Date: 22-OCT-2026</span>
+</div>
+</div>
+<!-- Simulated Line Items -->
+<div class="flex flex-col gap-1.5 font-tabular-data text-tabular-data">
+<div class="flex items-center justify-between text-secondary font-label-sm uppercase py-1 border-b-0">
+<span>Description of Spares / Service</span>
+<span>Amount (INR)</span>
+</div>
+<div class="flex items-center justify-between py-1 bg-surface-container-low px-2 rounded">
+<span class="text-on-surface font-medium">1. Front Bumper Skin OEM (Part #HY-86511)</span>
+<span class="text-on-surface font-semibold">₹48,500.00</span>
+</div>
+<div class="flex items-center justify-between py-1 bg-surface-container-low px-2 rounded">
+<span class="text-on-surface font-medium">2. Headlamp Assy RH LED Projector (Part #HY-92102)</span>
+<span class="text-on-surface font-semibold">₹56,200.00</span>
+</div>
+<div class="flex items-center justify-between py-1 bg-surface-container-low px-2 rounded">
+<span class="text-on-surface font-medium">3. Radiator Core Sub-Assy + Condenser Bracket</span>
+<span class="text-on-surface font-semibold">₹34,800.00</span>
+</div>
+<div class="flex items-center justify-between py-1 bg-surface-container-low px-2 rounded">
+<span class="text-on-surface font-medium">4. Structural Realignment & Paint Shop Labor</span>
+<span class="text-on-surface font-semibold">₹45,500.00</span>
+</div>
+<div class="flex items-center justify-between pt-space-xs mt-space-xs bg-surface-container p-space-sm rounded font-bold">
+<span class="text-on-surface">Total Estimated Claim Value:</span>
+<span class="text-primary font-headline-md text-headline-md">₹1,85,000.00</span>
+</div>
+</div>
+<!-- Stamp / Verified Watermark -->
+<div class="flex items-center justify-between text-secondary pt-2">
+<div class="flex items-center gap-1.5 text-surface-tint font-code-audit text-code-audit font-semibold">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>Apex Digital Seal Authenticated</span>
+</div>
+<span class="font-code-audit text-code-audit text-outline">Digital Copy 1 of 3</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4: Audit & Activity Timeline -->
+<div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">history</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Forensic Audit Trail & Lifecycle</h2>
+<p class="font-code-audit text-code-audit text-secondary">Immutable ledger of automated rules, triggers, and analyst actions</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container-high font-code-audit text-code-audit font-semibold text-on-surface-variant">Live Audit Feed</span>
+</div>
+<!-- Audit Timeline Component -->
+<div class="relative pl-6 flex flex-col gap-space-lg">
+<!-- Continuous Vertical Spine -->
+<div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-surface-container-highest"></div>
+<!-- Event 1 -->
+<div class="relative flex items-start gap-space-md">
+<div class="absolute -left-6 top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-surface-container-lowest"></div>
+<div class="flex flex-col gap-0.5 flex-1 min-w-0 bg-surface-container-low p-space-md rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Claim Submitted via Web Portal</span>
+<span class="font-code-audit text-code-audit text-secondary font-tabular-data">24 Oct, 10:14 AM IST</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Self-service digital FNOL submission with 3 initial attachments filed by insured Rajesh Kumar.</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-code-audit text-code-audit px-1.5 py-0.5 rounded bg-surface-container text-on-surface">IP: 114.143.210.82 (Mumbai)</span>
+<span class="font-code-audit text-code-audit text-primary">Aadhaar Auth: Success</span>
+</div>
+</div>
+</div>
+<!-- Event 2 -->
+<div class="relative flex items-start gap-space-md">
+<div class="absolute -left-6 top-1 w-3 h-3 rounded-full bg-secondary-fixed-dim ring-4 ring-surface-container-lowest"></div>
+<div class="flex flex-col gap-0.5 flex-1 min-w-0 bg-secondary-container/30 p-space-md rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Automated Rule Engine Executed</span>
+<span class="font-code-audit text-code-audit text-secondary font-tabular-data">24 Oct, 10:15 AM IST</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Claim evaluation completed across 18 rules. 2 indicators flagged for manual scrutiny (parts benchmark + delayed reporting).</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-code-audit text-code-audit px-1.5 py-0.5 rounded bg-surface-container-high text-on-error font-medium bg-error/80">2 Flags Generated</span>
+<span class="font-code-audit text-code-audit text-secondary">Latency: 480ms</span>
+</div>
+</div>
+</div>
+<!-- Event 3 -->
+<div class="relative flex items-start gap-space-md">
+<div class="absolute -left-6 top-1 w-3 h-3 rounded-full bg-surface-tint ring-4 ring-surface-container-lowest"></div>
+<div class="flex flex-col gap-0.5 flex-1 min-w-0 bg-surface-container-low p-space-md rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Assigned for Senior Manual Review</span>
+<span class="font-code-audit text-code-audit text-secondary font-tabular-data">25 Oct, 09:30 AM IST</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Allocated to Senior Claims Analyst Priya Sharma under High Priority Queue (Queue ID: MTR-HQ-09).</p>
+<span class="font-code-audit text-code-audit text-secondary mt-1">SLA Target: 24h</span>
+</div>
+</div>
+<!-- Event 4 -->
+<div class="relative flex items-start gap-space-md">
+<div class="absolute -left-6 top-1 w-3 h-3 rounded-full bg-primary-container ring-4 ring-surface-container-lowest"></div>
+<div class="flex flex-col gap-0.5 flex-1 min-w-0 bg-surface-container-low p-space-md rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Additional Verification Requested</span>
+<span class="font-code-audit text-code-audit text-secondary font-tabular-data">26 Oct, 02:15 PM IST</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Automated parts pricing catalog queried against regional benchmark database. Telephonic check confirmed with Apex Motors billing office.</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-code-audit text-code-audit px-1.5 py-0.5 rounded bg-surface-container text-on-surface">Analyst: P. Sharma</span>
+<span class="font-code-audit text-code-audit text-secondary">Verified OEM match</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column (40% ~ 4.8 of 12 cols, represented as col-span-5) -->
+<div class="lg:col-span-5 flex flex-col gap-space-xl min-w-0">
+<!-- Card 1: Validation Checklist & Rule-Based Suspicious Indicators -->
+<div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">rule</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Automated Rule Evaluation</h2>
+<p class="font-code-audit text-code-audit text-secondary">5 Engine Rules Evaluated on Ingestion</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-code-audit text-code-audit font-bold">2 Warnings</span>
+</div>
+<!-- Suspicious Warning Indicators -->
+<div class="flex flex-col gap-space-sm">
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">warning</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">Parts Benchmark Discrepancy</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-code-audit text-code-audit font-semibold">Severity: Medium</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant pl-7">
+              Repair estimate exceeds regional parts benchmark by <span class="font-semibold text-on-surface">28%</span> for Front Bumper assembly (Rule: <span class="font-code-audit font-medium">RUL-MTR-04</span>).
+            </p>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">schedule</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">Delayed Incident Filing</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-code-audit text-code-audit font-semibold">Severity: Low</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant pl-7">
+              Incident reported 4 days post occurrence. Baseline window is 48 hours for motor collisions (Rule: <span class="font-code-audit font-medium">RUL-TIM-01</span>).
+            </p>
+</div>
+</div>
+<!-- Verified / Passed System Checks -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Passed Verification Checks</span>
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface">Policy active and premium up to date</span>
+</div>
+<span class="font-code-audit text-code-audit text-primary font-bold">Passed</span>
+</div>
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface">No duplicate claim references across national database</span>
+</div>
+<span class="font-code-audit text-code-audit text-primary font-bold">Passed</span>
+</div>
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface">Claimant KYC verified via Aadhaar OTP</span>
+</div>
+<span class="font-code-audit text-code-audit text-primary font-bold">Passed</span>
+</div>
+</div>
+<!-- Human Judgment Operational Banner -->
+<div class="p-space-md rounded-lg bg-surface-container flex items-start gap-2.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">info</span>
+<p class="font-code-audit text-code-audit leading-relaxed">
+<strong class="font-semibold text-on-surface">Operational Directive:</strong> Rule flags require human operations judgment and do not confirm fraud. Verify parts variance against OEM warranty standards prior to rejection.
+          </p>
+</div>
+</div>
+<!-- Card 2: Reviewer Actions & Decision Panel -->
+<div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">rate_review</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Reviewer Findings & Decision</h2>
+<p class="font-code-audit text-code-audit text-secondary">Manual adjudicator audit notes and sign-off criteria</p>
+</div>
+</div>
+<span class="font-code-audit text-code-audit text-outline">Mandatory</span>
+</div>
+<!-- Verification Checklist Form -->
+<div class="flex flex-col gap-space-sm bg-surface-container-low p-space-md rounded-lg">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Required Analyst Confirmations</span>
+<label class="flex items-center gap-2.5 cursor-pointer">
+<input checked="" class="w-4 h-4 rounded text-primary focus:ring-primary focus:ring-offset-0 accent-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface select-none">Policy validity and comprehensive coverage confirmed</span>
+</label>
+<label class="flex items-center gap-2.5 cursor-pointer">
+<input checked="" class="w-4 h-4 rounded text-primary focus:ring-primary focus:ring-offset-0 accent-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface select-none">Invoice authenticity & GSTIN checked with workshop</span>
+</label>
+<label class="flex items-center gap-2.5 cursor-pointer">
+<input class="w-4 h-4 rounded text-primary focus:ring-primary focus:ring-offset-0 accent-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface select-none">Secondary supervisor sign-off obtained (Required > ₹1,50,000)</span>
+</label>
+</div>
+<!-- Notes Textarea -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm text-secondary uppercase tracking-wider" for="reviewNotes">Review Findings & Rationale</label>
+<span class="font-code-audit text-code-audit text-outline">162 / 500 chars</span>
+</div>
+<textarea class="w-full p-space-md rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none placeholder:text-outline" id="reviewNotes" placeholder="Enter review findings, corroborating evidence or rationale..." rows="4">Verified garage quote with Apex Motors. Bumper replacement cost is standard for OEM parts; labor charges are within acceptable margin.</textarea>
+</div>
+<!-- Quick Action Trigger Buttons -->
+<div class="flex flex-col sm:flex-row items-center gap-space-sm pt-space-xs">
+<button class="w-full sm:flex-1 h-10 px-4 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md transition-all flex items-center justify-center gap-2 shadow-sm" onclick="openApproveModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Proceed to Approval</span>
+</button>
+<button class="w-full sm:w-auto h-10 px-4 rounded-lg bg-surface-container-low hover:bg-error-container text-error hover:text-on-error-container font-label-md text-label-md transition-all flex items-center justify-center gap-1.5" onclick="openRejectModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">block</span>
+<span>Reject</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Modal: Approve Claim Confirmation (Integrated Level 4 Dialog) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-on-surface/40 backdrop-blur-sm hidden transition-opacity" id="approveModal">
+<div class="w-full max-w-lg bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+<div class="p-space-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Approve Claim Settlement</h3>
+<p class="font-code-audit text-code-audit text-secondary">Authorize direct financial disbursement for CLM-2026-001</p>
+</div>
+</div>
+<button class="p-1.5 rounded-lg text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" onclick="closeApproveModal()" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="p-space-xl flex flex-col gap-space-lg">
+<!-- Settlement Ledger Summary -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col gap-2 font-tabular-data">
+<div class="flex items-center justify-between font-body-sm text-body-sm text-secondary">
+<span>Approved Gross Claim Amount</span>
+<span class="font-semibold text-on-surface">₹1,85,000</span>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm text-secondary">
+<span>Standard Policy Deductible (Comp Gold)</span>
+<span class="font-semibold text-error">- ₹2,000</span>
+</div>
+<div class="pt-2 mt-1 bg-surface-container-high px-3 py-2 rounded-lg flex items-center justify-between">
+<span class="font-label-md text-label-md font-bold text-on-surface">Net Payout to Garage</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">₹1,83,000</span>
+</div>
+</div>
+<!-- Remarks Input -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-secondary uppercase tracking-wider" for="approveRemarks">Mandatory Reviewer Remarks</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary" id="approveRemarks" type="text" value="Parts and estimate verified with workshop supervisor. Authorized for release."/>
+<span class="font-code-audit text-code-audit text-outline">Will be signed under Priya Sharma (Senior Analyst) credential key</span>
+</div>
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-secondary-container/40">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">account_balance</span>
+<span class="font-code-audit text-code-audit text-on-secondary-container">Direct NEFT Transfer to Apex Motors ICICI A/C: •••• 4402</span>
+</div>
+<span class="font-code-audit text-code-audit font-bold text-primary">Pre-Approved</span>
+</div>
+</div>
+<div class="p-space-lg bg-surface-container-low flex items-center justify-end gap-space-sm">
+<button class="h-9 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" onclick="closeApproveModal()" type="button">
+          Cancel
+        </button>
+<button class="h-9 px-4 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md transition-all flex items-center gap-1.5 shadow-sm" onclick="executeApprove()" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span>Confirm Approval & Authorize Payment</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Interactive Modal: Reject Claim Confirmation (Integrated Dialog) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-on-surface/40 backdrop-blur-sm hidden transition-opacity" id="rejectModal">
+<div class="w-full max-w-lg bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+<div class="p-space-lg bg-error-container text-on-error-container flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-error text-on-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">block</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md font-bold">Reject Claim</h3>
+<p class="font-code-audit text-code-audit opacity-90">Irrevocable operational decision for CLM-2026-001</p>
+</div>
+</div>
+<button class="p-1.5 rounded-lg hover:bg-on-error-container/10 transition-colors" onclick="closeRejectModal()" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="p-space-xl flex flex-col gap-space-lg">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-secondary uppercase tracking-wider" for="rejectReason">Rejection Reason Code (Mandatory)</label>
+<select class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-error" id="rejectReason">
+<option value="terms">Ineligible Damage under Policy Terms</option>
+<option value="mismatch">Damage Inconsistent with Incident Description</option>
+<option value="fabricated">Fabricated Invoices or Unauthorized Workshop</option>
+<option value="expired">Delayed FNOL Exceeding Statutory Window</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-secondary uppercase tracking-wider" for="rejectionRemarks">Formal Rejection Notes (Claimant Notice)</label>
+<textarea class="w-full p-space-sm rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-error resize-none" id="rejectionRemarks" placeholder="Provide forensic rationale for rejection notice..." rows="3"></textarea>
+<span class="font-code-audit text-code-audit text-error flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">report</span>
+<span>Notice: Rejection letters are formally logged for Insurance Ombudsman audit.</span>
+</span>
+</div>
+</div>
+<div class="p-space-lg bg-surface-container-low flex items-center justify-end gap-space-sm">
+<button class="h-9 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" onclick="closeRejectModal()" type="button">
+          Cancel
+        </button>
+<button class="h-9 px-4 rounded-lg bg-error text-on-error hover:opacity-90 font-label-md text-label-md transition-all flex items-center gap-1.5 shadow-sm" onclick="executeReject()" type="button">
+<span class="material-symbols-outlined text-[18px]">gavel</span>
+<span>Confirm Rejection & Dispatch Notice</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Interactive Modal: Request Information (Integrated Dialog) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-on-surface/40 backdrop-blur-sm hidden transition-opacity" id="requestInfoModal">
+<div class="w-full max-w-lg bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden flex flex-col">
+<div class="p-space-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">help_center</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Request Additional Evidence</h3>
+</div>
+<button class="p-1.5 rounded-lg text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" onclick="closeRequestInfoModal()" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="p-space-xl flex flex-col gap-space-md">
+<label class="font-label-sm text-label-sm text-secondary uppercase">Information Type</label>
+<div class="grid grid-cols-2 gap-space-xs text-body-sm font-body-sm">
+<label class="p-space-sm bg-surface-container-low rounded-lg flex items-center gap-2 cursor-pointer">
+<input checked="" class="accent-primary" type="checkbox"/>
+<span>OEM Parts Catalog Copy</span>
+</label>
+<label class="p-space-sm bg-surface-container-low rounded-lg flex items-center gap-2 cursor-pointer">
+<input class="accent-primary" type="checkbox"/>
+<span>Dashcam Footage</span>
+</label>
+<label class="p-space-sm bg-surface-container-low rounded-lg flex items-center gap-2 cursor-pointer">
+<input checked="" class="accent-primary" type="checkbox"/>
+<span>Vehicle Chassis Clear Stamp</span>
+</label>
+<label class="p-space-sm bg-surface-container-low rounded-lg flex items-center gap-2 cursor-pointer">
+<input class="accent-primary" type="checkbox"/>
+<span>Witness Statement</span>
+</label>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-secondary uppercase">Analyst Direct Query to Claimant</label>
+<textarea class="w-full p-space-sm rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none" placeholder="Explain requirements clearly to the policyholder..." rows="3">Please provide the high-resolution photo of the chassis stamped VIN plate alongside the Apex Motors parts invoice breakdown.</textarea>
+</div>
+</div>
+<div class="p-space-lg bg-surface-container-low flex items-center justify-end gap-space-sm">
+<button class="h-9 px-4 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md" onclick="closeRequestInfoModal()" type="button">Cancel</button>
+<button class="h-9 px-4 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md flex items-center gap-1.5" onclick="closeRequestInfoModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">send</span>
+<span>Send Notification (SMS & Portal)</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Inline Script for Modal Control and Interactions -->
+<script>
+    function openApproveModal() {
+      document.getElementById('approveModal').classList.remove('hidden');
+    }
+    function closeApproveModal() {
+      document.getElementById('approveModal').classList.add('hidden');
+    }
+
+    function openRejectModal() {
+      document.getElementById('rejectModal').classList.remove('hidden');
+    }
+    function closeRejectModal() {
+      document.getElementById('rejectModal').classList.add('hidden');
+    }
+
+    function openRequestInfoModal() {
+      document.getElementById('requestInfoModal').classList.remove('hidden');
+    }
+    function closeRequestInfoModal() {
+      document.getElementById('requestInfoModal').classList.add('hidden');
+    }
+
+    function executeApprove() {
+      closeApproveModal();
+      alert('Claim CLM-2026-001 has been Approved. ₹1,83,000 disbursement queued.');
+    }
+
+    function executeReject() {
+      closeRejectModal();
+      alert('Claim CLM-2026-001 has been marked as Rejected. Formal notification dispatched.');
+    }
+  </script>
+</div></main></div></body></html>

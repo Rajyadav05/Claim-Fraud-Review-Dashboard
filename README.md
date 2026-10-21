@@ -1,4 +1,4 @@
-# ClaimGuard — Claim Fraud Review Dashboard
+# ClaimGuard â€” Claim Fraud Review Dashboard
 
 > **College DevOps Project** | Jenkins Deployment for a Claim Fraud Review Dashboard
 
@@ -8,7 +8,7 @@
 
 A web-based insurance **Claim Fraud Review Dashboard** that allows operators to submit insurance claims, surfaces deterministic heuristic suspicious indicators for trained reviewers, captures structured approve/reject decisions with mandatory remarks, and maintains an immutable audit trail of review actions.
 
-The application is the subject of a college DevOps module assignment. The primary technical deliverable is an automated **Jenkins CI/CD pipeline** that compiles, tests, containerises, and deploys the application using Docker and Ansible — demonstrating the complete software delivery lifecycle from requirements through to automated deployment.
+The application is the subject of a college DevOps module assignment. The primary technical deliverable is an automated **Jenkins CI/CD pipeline** that compiles, tests, containerises, and deploys the application using Docker and Ansible â€” demonstrating the complete software delivery lifecycle from requirements through to automated deployment.
 
 > **Important Notices:**<br>
 > 1. All claim data used in this project is strictly **synthetic**. No real policyholder data is used at any stage.<br>
@@ -31,32 +31,33 @@ The application is the subject of a college DevOps module assignment. The primar
 | **Frontend UI** | HTML5 / Vanilla JS / Tailwind CDN | Google Stitch Design Reference Adaptation | Implemented |
 | **UI Reference** | Google Stitch | 4 Reference Screens under `docs/stitch-export/` | Preserved Ground Truth |
 | **Testing** | JUnit 5 + Mockito + MockMvc | 11 Automated Tests | Implemented |
-| **Version Control** | Git + GitHub | Feature branch: `feature/claim-review-mvp` | In Progress |
-| **CI/CD** | Jenkins | Automated build, test, and package pipeline | Planned (Task 7+) |
+| **Version Control** | Git + GitHub | Branch: `main` (feature merged via PR #1) | Implemented |
+| **CI/CD** | Jenkins | Declarative Pipeline as Code ([`Jenkinsfile`](Jenkinsfile)) | Implemented ([Task 8](docs/task-08-pipeline-as-code-and-server-deployment.md)) |
 | **Containerisation** | Docker | Multi-stage Dockerfile packaging | Planned (Task 10+) |
 | **Configuration** | Ansible | Playbooks for automated provisioning | Planned (Task 12+) |
 | **E2E Testing** | Selenium WebDriver | Automated critical journey testing | Planned (Task 9+) |
 
 ---
 
-## Current Development Stage: Task 5 — Feature Development with Branching
+## Current Development Stage: Task 8 â€” Pipeline as Code and Server Deployment
 
-- **Active Branch:** `feature/claim-review-mvp`
-- **Initial Baseline Commit:** `02386fe252b38e2a0e1783cff04b77f756ab7fdc`
+- **Active Branch:** `main`
+- **Pipeline as Code:** Root [`Jenkinsfile`](Jenkinsfile) implementing Declarative Pipeline stages (Initialize, Verify Environment, Run Automated Tests, Package Application, Server Deployment Standby).
+- **Task 8 Documentation:** [`docs/task-08-pipeline-as-code-and-server-deployment.md`](docs/task-08-pipeline-as-code-and-server-deployment.md) covering pipeline architecture, Jenkins job setup, verification evidence, and safe Windows staging procedures.
 - **Implemented Work:**
   - Standard Spring Boot 3.3.4 project layout using Java 21 and Maven.
   - Relational entities: `Claim`, `ClaimDocument`, `SuspiciousIndicator`, `ReviewHistory`.
   - Spring Data JPA repositories and embedded H2 database configuration.
   - Deterministic heuristic rule evaluation engine (`IndicatorRuleEngine`) evaluating 5 business rules:
-    - `RUL-AMT-01`: High Value Claim Threshold (≥ ₹1,50,000)
+    - `RUL-AMT-01`: High Value Claim Threshold (â‰¥ â‚¹1,50,000)
     - `RUL-TIM-01`: Delayed Incident Reporting (> 48 hours)
-    - `RUL-MTR-04`: Parts Benchmark Discrepancy (> ₹1,00,000)
+    - `RUL-MTR-04`: Parts Benchmark Discrepancy (> â‚¹1,00,000)
     - `RUL-DUP-01`: Duplicate Claim Submission Detection
     - `RUL-DOC-02`: Missing Mandatory Supporting Documents
   - REST API controllers for Claims, Reviews, and Health monitoring.
   - Synthetic data seeder initializing 5 realistic test claims covering diverse lifecycle states (`SUBMITTED`, `UNDER_REVIEW`, `MORE_INFO_REQUIRED`, `APPROVED`, `REJECTED`).
   - Adapted frontend static web console (`index.html`, `claims.html`, `submit.html`, `review.html`) with localized SVG branding and responsive async REST integration.
-  - Comprehensive unit and integration test suite passing 100% of tests.
+  - Comprehensive unit and integration test suite passing 100% of tests (11 tests).
 
 ---
 
@@ -64,22 +65,22 @@ The application is the subject of a college DevOps module assignment. The primar
 
 ### Prerequisites
 - **Java Development Kit (JDK):** OpenJDK 21 LTS installed (`JAVA_HOME` configured).
-- **Maven:** Version 3.9+ or use the included Maven Wrapper (`.\mvnw`).
+- **Maven:** Version 3.9+ or use the included Maven Wrapper (`.\mvnw.cmd`).
 
 ### 1. Build and Run Tests
 From the project root:
 ```powershell
-.\mvnw test
+.\mvnw.cmd test
 ```
 
 ### 2. Package Executable JAR
 ```powershell
-.\mvnw clean package
+.\mvnw.cmd clean package
 ```
 
 ### 3. Run Application Locally
 ```powershell
-.\mvnw spring-boot:run
+.\mvnw.cmd spring-boot:run
 ```
 Or execute the packaged JAR directly:
 ```powershell
@@ -114,10 +115,10 @@ The server starts by default on port `8080`.
 | Task 02 | Agile Planning and DevOps Workflow | **Completed** (`docs/task-02-agile-planning.md`) |
 | Task 03 | Requirements, Architecture and Technology Setup | **Completed** (`docs/task-03-requirements-architecture.md`) |
 | Task 04 | Git and GitHub Repository Initialization | **Completed** (`main` pushed to GitHub) |
-| Task 05 | Feature Development with Branching | **In Progress** (`feature/claim-review-mvp`) |
-| Task 06 | Code Review and Branch Merging | Planned |
-| Task 07 | Jenkins Pipeline Setup (CI Build & Test) | Planned |
-| Task 08 | Automated Testing Pipeline Integration | Planned |
+| Task 05 | Feature Development with Branching | **Completed** (`feature/claim-review-mvp`) |
+| Task 06 | Code Review and Branch Merging | **Completed** (`docs/task-06-mvp-completion-and-git-collaboration.md`, PR #1 merged) |
+| Task 07 | Jenkins Pipeline Setup (CI Build & Test) | **Completed** (Freestyle job `ClaimGuard-CI` verified) |
+| Task 08 | Pipeline as Code and Server Deployment | **Completed** ([`Jenkinsfile`](Jenkinsfile), [`docs/task-08-pipeline-as-code-and-server-deployment.md`](docs/task-08-pipeline-as-code-and-server-deployment.md)) |
 | Task 09 | Selenium End-to-End Automated Testing | Planned |
 | Task 10 | Docker Container Packaging | Planned |
 | Task 11 | Jenkins + Docker Automated Pipeline | Planned |
@@ -127,4 +128,4 @@ The server starts by default on port `8080`.
 
 ---
 
-*ClaimGuard — Claim Fraud Review Dashboard | College DevOps Assignment | Raj Yadav | 2026*
+*ClaimGuard â€” Claim Fraud Review Dashboard | College DevOps Assignment | Raj Yadav | 2026*

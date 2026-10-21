@@ -18,17 +18,25 @@ param (
     [string]$JarPath = "target\claimguard-dashboard-1.0.0-SNAPSHOT.jar",
     [int]$MaxWaitSeconds = 30,
     [string]$JavaHome = "C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot",
-    [bool]$Headless = $true
+    $Headless = $true
 )
 
 $ErrorActionPreference = "Stop"
+
+# Normalize Headless setting (supports boolean $true/$false, integer 1/0, or string "$true"/"true"/"false"/"$false")
+$isHeadless = if ($Headless -is [bool]) {
+    $Headless
+} else {
+    $val = "$Headless".Trim().ToLowerInvariant()
+    -not ($val -eq "false" -or $val -eq "$false" -or $val -eq "0" -or $val -eq "no" -or $val -eq "off")
+}
 
 Write-Host "============================================================"
 Write-Host "[E2E RUNNER] ClaimGuard Automated E2E Test Suite"
 Write-Host "Target Port        : $Port"
 Write-Host "Application JAR    : $JarPath"
 Write-Host "Max Readiness Wait : $MaxWaitSeconds seconds"
-Write-Host "Headless Mode      : $Headless"
+Write-Host "Headless Mode      : $isHeadless"
 Write-Host "============================================================"
 
 # Configure Java runtime
@@ -169,7 +177,7 @@ try {
             "test",
             "-Dtest=ClaimGuardSeleniumE2ETest",
             "-Dclaimguard.base-url=http://localhost:$Port",
-            "-Dselenium.headless=$Headless"
+            "-Dselenium.headless=$isHeadless"
         )
 
         if ($JavaHome) {

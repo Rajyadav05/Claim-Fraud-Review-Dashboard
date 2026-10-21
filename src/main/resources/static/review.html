@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>ClaimGuard — Claim Details & Forensic Adjudication</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+    <style>
+        @layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}
+        ::-webkit-scrollbar{display:none;}
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#e6e8ea",
+                        "inverse-primary": "#b7c4ff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container": "#eceef0",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#d3e4fe",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary-container": "#4d5d73",
+                        "secondary": "#565e74",
+                        "tertiary": "#36455b",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "secondary-container": "#dae2fd",
+                        "surface-tint": "#2151da",
+                        "background": "#f7f9fb",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary": "#0037b0",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "on-primary-container": "#cad3ff",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "on-tertiary-container": "#c5d6f0",
+                        "on-surface": "#191c1e",
+                        "secondary-fixed": "#dae2fd",
+                        "outline": "#747686",
+                        "surface": "#f7f9fb",
+                        "surface-dim": "#d8dadc",
+                        "on-surface-variant": "#434655",
+                        "surface-variant": "#e0e3e5",
+                        "inverse-surface": "#2d3133",
+                        "on-primary-fixed-variant": "#0039b5",
+                        "primary-container": "#1d4ed8",
+                        "surface-container-low": "#f2f4f6",
+                        "primary-fixed": "#dce1ff",
+                        "outline-variant": "#c4c5d7",
+                        "on-secondary-container": "#5c647a",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-primary-fixed": "#001551",
+                        "on-background": "#191c1e",
+                        "on-secondary-fixed": "#131b2e",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    "fontFamily": {
+                        "body-md": ["Inter"], "tabular-data": ["Inter"], "label-md": ["Inter"], "headline-xl": ["Inter"],
+                        "body-sm": ["Inter"], "body-lg": ["Inter"], "code-audit": ["Inter"], "label-sm": ["Inter"],
+                        "headline-lg": ["Inter"], "headline-md": ["Inter"]
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="bg-background font-body-md text-body-md text-on-surface antialiased">
+    <!-- Sidebar Navigation -->
+    <aside class="fixed left-0 top-0 h-full w-64 bg-on-secondary-fixed text-surface-container-lowest z-50 flex flex-col justify-between">
+        <div class="flex flex-col">
+            <div class="h-16 px-space-lg flex items-center gap-space-sm bg-on-secondary-fixed">
+                <img alt="ClaimGuard Logo" class="h-8 w-auto object-contain" src="/assets/claimguard-logo.svg"/>
+                <div class="flex flex-col">
+                    <span class="font-headline-md text-headline-md text-surface-container-lowest leading-none">ClaimGuard</span>
+                    <span class="font-label-sm text-label-sm text-secondary-fixed-dim uppercase tracking-wider mt-1">Enterprise Fraud Ops</span>
+                </div>
+            </div>
+            <nav class="flex flex-col gap-1 px-space-md py-space-lg">
+                <a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" href="/index.html">
+                    <span class="material-symbols-outlined text-[20px]">dashboard</span>
+                    <span class="font-label-md text-label-md">Dashboard</span>
+                </a>
+                <a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" href="/claims.html">
+                    <span class="material-symbols-outlined text-[20px]">folder_open</span>
+                    <span class="font-label-md text-label-md">All Claims</span>
+                </a>
+                <a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" href="/submit.html">
+                    <span class="material-symbols-outlined text-[20px]">add_circle</span>
+                    <span class="font-label-md text-label-md">Submit Claim</span>
+                </a>
+                <a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" href="/claims.html?status=UNDER_REVIEW">
+                    <div class="flex items-center gap-space-md">
+                        <span class="material-symbols-outlined text-[20px]">schedule</span>
+                        <span class="font-label-md text-label-md">Pending Reviews</span>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">1</span>
+                </a>
+            </nav>
+        </div>
+        <div class="p-space-md m-space-sm rounded-xl bg-on-tertiary-fixed flex items-center justify-between">
+            <div class="flex items-center gap-space-sm">
+                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">PS</div>
+                <div class="flex flex-col">
+                    <span class="font-label-md text-label-md text-surface-container-lowest leading-tight">Priya Sharma</span>
+                    <span class="font-label-sm text-label-sm text-secondary-fixed-dim">Senior Claims Analyst</span>
+                </div>
+            </div>
+            <a href="/index.html" class="text-secondary-fixed-dim hover:text-surface-container-lowest p-1 rounded transition-colors" title="Home">
+                <span class="material-symbols-outlined text-[20px]">home</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Top Bar -->
+    <div class="pl-64">
+        <header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl">
+            <div class="flex items-center gap-space-xl flex-1 max-w-2xl">
+                <div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+                    <a class="hover:text-primary transition-colors" href="/claims.html">Claims</a>
+                    <span>/</span>
+                    <span id="breadcrumb-claim-ref" class="text-on-surface font-semibold font-mono">CLM-2026-0001</span>
+                    <span>/</span>
+                    <span class="text-secondary">Forensic Review</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-space-lg">
+                <a class="inline-flex items-center gap-space-xs h-9 px-space-md rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-md text-label-md transition-colors" href="/claims.html">
+                    <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                    <span>Back to Directory</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Forensic Review Workspace -->
+        <main class="relative pt-16 w-full min-h-screen bg-background">
+            <div class="flex flex-col w-full">
+                <!-- Dossier Command Header Strip -->
+                <div class="px-space-xl py-space-md bg-surface-container-lowest border-b border-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+                    <div class="flex items-center gap-space-md">
+                        <div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center font-bold text-lg">
+                            <span class="material-symbols-outlined text-[24px]">policy</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="flex items-center gap-2">
+                                <h1 id="dossier-claim-ref" class="font-headline-lg text-headline-lg font-bold text-on-surface font-mono">CLM-2026-0001</h1>
+                                <span id="dossier-status-badge" class="px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-secondary-container text-on-secondary-fixed">Under Review</span>
+                                <span id="dossier-priority-badge" class="px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-error-container text-on-error-container">High Risk</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-xs text-secondary mt-0.5">
+                                <span>Policy: <strong id="dossier-policy-num" class="font-mono text-on-surface">POL-MH-9482-1049</strong></span>
+                                <span>•</span>
+                                <span>Claimant: <strong id="dossier-claimant-name" class="text-on-surface">Rajesh Kumar</strong></span>
+                                <span>•</span>
+                                <span>Ingested: <span id="dossier-date" class="text-on-surface">Oct 28, 2026</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-space-lg">
+                        <div class="flex flex-col text-right">
+                            <span class="font-label-sm text-label-sm text-secondary uppercase">Claim Amount</span>
+                            <span id="dossier-claim-amount" class="font-headline-lg text-headline-lg font-bold text-primary font-tabular-data">₹1,85,000</span>
+                        </div>
+                        <div id="dossier-approved-wrapper" class="hidden flex flex-col text-right pl-4 border-l border-surface-container-high">
+                            <span class="font-label-sm text-label-sm text-secondary uppercase">Approved Settlement</span>
+                            <span id="dossier-approved-amount" class="font-headline-lg text-headline-lg font-bold text-emerald-700 font-tabular-data">₹1,83,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2-Column Review Layout (60% / 40%) -->
+                <div class="p-space-xl grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start max-w-[1720px] mx-auto w-full">
+                    <!-- Left Column (60% ~ 7 cols) -->
+                    <div class="lg:col-span-7 flex flex-col gap-space-xl min-w-0">
+                        <!-- Card 1: Incident Summary & Forensics -->
+                        <div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-lg">
+                            <div class="flex items-center justify-between pb-space-sm border-b border-surface-container-low">
+                                <div class="flex items-center gap-space-sm">
+                                    <div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">directions_car</span>
+                                    </div>
+                                    <div>
+                                        <h2 class="font-headline-md text-headline-md text-on-surface">Incident Details & Forensics</h2>
+                                        <p class="font-code-audit text-code-audit text-secondary">Telematics and claimant statement records</p>
+                                    </div>
+                                </div>
+                                <span id="dossier-claim-type" class="px-2.5 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">MOTOR</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md p-space-md rounded-lg bg-surface-container-low">
+                                <div>
+                                    <span class="font-label-sm text-label-sm text-secondary uppercase">Vehicle Registration</span>
+                                    <p id="dossier-vehicle-reg" class="font-tabular-data text-tabular-data font-bold text-on-surface mt-0.5">MH-02-CE-8841</p>
+                                </div>
+                                <div>
+                                    <span class="font-label-sm text-label-sm text-secondary uppercase">Incident Location</span>
+                                    <p id="dossier-location" class="font-body-md text-body-md font-medium text-on-surface mt-0.5">Andheri East, Mumbai</p>
+                                </div>
+                                <div>
+                                    <span class="font-label-sm text-label-sm text-secondary uppercase">Contact Credential</span>
+                                    <p id="dossier-phone" class="font-body-md text-body-md font-medium text-on-surface mt-0.5">+91 98201 12345</p>
+                                    <p id="dossier-email" class="font-code-audit text-code-audit text-primary">r.kumar@nexuscorp.in</p>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-space-xs">
+                                <span class="font-label-sm text-label-sm text-secondary uppercase">Narrative & Impact Analysis</span>
+                                <p id="dossier-narrative" class="font-body-md text-body-md text-on-surface leading-relaxed bg-surface-container-low p-space-md rounded-lg">
+                                    Insured vehicle was involved in a collision during wet pavement conditions. Front bumper assembly, radiator grill, and right headlamp cluster sustained damage.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Attached Supporting Documents -->
+                        <div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-lg">
+                            <div class="flex items-center justify-between pb-space-sm border-b border-surface-container-low">
+                                <div class="flex items-center gap-space-sm">
+                                    <div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">attach_file</span>
+                                    </div>
+                                    <div>
+                                        <h2 class="font-headline-md text-headline-md text-on-surface">Attached Supporting Documents</h2>
+                                        <p class="font-code-audit text-code-audit text-secondary">Verified evidence dossier</p>
+                                    </div>
+                                </div>
+                                <span class="font-code-audit text-code-audit text-outline">SHA-256 Validated</span>
+                            </div>
+
+                            <div id="dossier-documents-list" class="flex flex-col gap-space-sm">
+                                <!-- Documents loaded via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Review History Timeline -->
+                        <div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-lg">
+                            <div class="flex items-center justify-between pb-space-sm border-b border-surface-container-low">
+                                <div class="flex items-center gap-space-sm">
+                                    <div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">history</span>
+                                    </div>
+                                    <div>
+                                        <h2 class="font-headline-md text-headline-md text-on-surface">Append-Only Audit History</h2>
+                                        <p class="font-code-audit text-code-audit text-secondary">Immutable event trail for regulatory compliance</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="dossier-history-timeline" class="flex flex-col gap-4 pl-2 border-l-2 border-surface-container-high">
+                                <!-- Timeline entries loaded via JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column (40% ~ 5 cols) -->
+                    <div class="lg:col-span-5 flex flex-col gap-space-xl min-w-0">
+                        <!-- Card 1: Automated Rule Evaluation -->
+                        <div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-lg">
+                            <div class="flex items-center justify-between pb-space-sm border-b border-surface-container-low">
+                                <div class="flex items-center gap-space-sm">
+                                    <div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">rule</span>
+                                    </div>
+                                    <div>
+                                        <h2 class="font-headline-md text-headline-md text-on-surface">Automated Rule Evaluation</h2>
+                                        <p class="font-code-audit text-code-audit text-secondary">Deterministic Heuristic Scoring Engine</p>
+                                    </div>
+                                </div>
+                                <span id="dossier-warnings-count" class="px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-code-audit text-code-audit font-bold">2 Warnings</span>
+                            </div>
+
+                            <!-- Indicators list -->
+                            <div id="dossier-indicators-list" class="flex flex-col gap-space-sm">
+                                <!-- Populated dynamically -->
+                            </div>
+
+                            <!-- Human Judgment Directive Banner -->
+                            <div class="p-space-md rounded-lg bg-surface-container flex items-start gap-2.5 text-on-surface-variant">
+                                <span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">info</span>
+                                <p class="font-code-audit text-code-audit leading-relaxed">
+                                    <strong class="font-semibold text-on-surface">Operational Directive:</strong> Rule flags require human adjudicator evaluation and do not confirm fraud. Cross-verify evidence prior to final decision.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Adjudication Decision Panel -->
+                        <div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-lg">
+                            <div class="flex items-center justify-between pb-space-sm border-b border-surface-container-low">
+                                <div class="flex items-center gap-space-sm">
+                                    <div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">rate_review</span>
+                                    </div>
+                                    <div>
+                                        <h2 class="font-headline-md text-headline-md text-on-surface">Adjudication Actions</h2>
+                                        <p class="font-code-audit text-code-audit text-secondary">Authorized reviewer sign-off panel</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-outline font-semibold">Assigned: <strong id="dossier-reviewer-label" class="text-on-surface">Priya Sharma</strong></span>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div id="action-buttons-container" class="flex flex-col gap-2.5">
+                                <button id="btn-start-review" onclick="triggerStartReview()" class="w-full h-10 px-4 rounded-lg bg-secondary-container text-on-secondary-fixed hover:bg-secondary hover:text-white font-label-md text-label-md font-semibold transition-all flex items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined text-[18px]">assignment_ind</span>
+                                    <span>Start Review / Assign to Me</span>
+                                </button>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button onclick="openApproveModal()" class="h-10 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-label-md text-label-md font-semibold transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                                        <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                                        <span>Approve Claim</span>
+                                    </button>
+                                    <button onclick="openRejectModal()" class="h-10 px-4 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-label-md text-label-md font-semibold transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                                        <span class="material-symbols-outlined text-[18px]">block</span>
+                                        <span>Reject Claim</span>
+                                    </button>
+                                </div>
+                                <button onclick="openRequestInfoModal()" class="w-full h-10 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-all flex items-center justify-center gap-1.5">
+                                    <span class="material-symbols-outlined text-[18px]">help</span>
+                                    <span>Request More Info</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Approve Modal -->
+    <div id="approveModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-on-surface/40 backdrop-blur-sm hidden">
+        <div class="w-full max-w-lg bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden flex flex-col p-6 gap-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-emerald-600 text-2xl">verified</span>
+                    <h3 class="font-bold text-lg text-on-surface">Approve Claim Settlement</h3>
+                </div>
+                <button onclick="closeModals()" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div class="bg-surface-container-low p-4 rounded-xl flex flex-col gap-2 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-secondary">Gross Claimed Amount:</span>
+                    <span id="modal-approve-gross" class="font-semibold text-on-surface">₹1,85,000</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-secondary">Policy Deductible:</span>
+                    <div class="flex items-center gap-1">
+                        <span class="text-xs">₹</span>
+                        <input id="approveDeductible" type="number" value="2000" class="w-24 px-2 py-1 bg-surface-container-lowest rounded border text-right font-semibold" oninput="calculateNetPayout()"/>
+                    </div>
+                </div>
+                <div class="flex justify-between pt-2 border-t font-bold">
+                    <span>Net Settlement Payout:</span>
+                    <span id="modal-approve-net" class="text-primary text-base font-bold">₹1,83,000</span>
+                </div>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-xs uppercase font-semibold text-secondary" for="approveRemarks">Adjudicator Settlement Remarks</label>
+                <input id="approveRemarks" type="text" value="Repair estimate and survey findings verified. Settlement authorized." class="w-full h-10 px-3 rounded-lg bg-surface-container-low border text-sm outline-none focus:ring-2 focus:ring-primary"/>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeModals()" class="px-4 py-2 bg-surface-container rounded-lg text-xs font-semibold">Cancel</button>
+                <button onclick="submitApproval()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1 shadow-sm">
+                    <span class="material-symbols-outlined text-sm">check</span>
+                    <span>Confirm & Authorize</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reject Modal -->
+    <div id="rejectModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-on-surface/40 backdrop-blur-sm hidden">
+        <div class="w-full max-w-lg bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden flex flex-col p-6 gap-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-rose-600 text-2xl">block</span>
+                    <h3 class="font-bold text-lg text-on-surface">Reject Claim</h3>
+                </div>
+                <button onclick="closeModals()" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-xs uppercase font-semibold text-secondary" for="rejectReasonCode">Rejection Reason Code</label>
+                <select id="rejectReasonCode" class="w-full h-10 px-3 rounded-lg bg-surface-container-low border text-sm outline-none">
+                    <option value="forensic_mismatch">Forensic Estimate Discrepancy</option>
+                    <option value="uncovered_peril">Damage Pre-dating Inception</option>
+                    <option value="fraud_suspected">Suspected Policy Violation</option>
+                    <option value="documentation_invalid">Invalid or Forged Invoices</option>
+                </select>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-xs uppercase font-semibold text-secondary" for="rejectRemarks">Adjudicator Rationale</label>
+                <textarea id="rejectRemarks" rows="3" class="w-full p-3 rounded-lg bg-surface-container-low border text-sm outline-none">Independent survey confirmed damaged components do not correlate with collision statement.</textarea>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeModals()" class="px-4 py-2 bg-surface-container rounded-lg text-xs font-semibold">Cancel</button>
+                <button onclick="submitRejection()" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1 shadow-sm">
+                    <span class="material-symbols-outlined text-sm">block</span>
+                    <span>Confirm Rejection</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Info Modal -->
+    <div id="requestInfoModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-on-surface/40 backdrop-blur-sm hidden">
+        <div class="w-full max-w-lg bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden flex flex-col p-6 gap-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-blue-600 text-2xl">help</span>
+                    <h3 class="font-bold text-lg text-on-surface">Request Additional Evidence</h3>
+                </div>
+                <button onclick="closeModals()" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="text-xs uppercase font-semibold text-secondary" for="infoQuery">Information Query & Requirements</label>
+                <textarea id="infoQuery" rows="3" class="w-full p-3 rounded-lg bg-surface-container-low border text-sm outline-none">Please supply itemized OEM workshop invoices and police accident log entry within 7 business days.</textarea>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeModals()" class="px-4 py-2 bg-surface-container rounded-lg text-xs font-semibold">Cancel</button>
+                <button onclick="submitRequestInfo()" class="px-4 py-2 bg-primary-container text-on-primary hover:bg-primary rounded-lg text-xs font-semibold flex items-center gap-1 shadow-sm">
+                    <span class="material-symbols-outlined text-sm">send</span>
+                    <span>Dispatch Query</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        let currentClaim = null;
+
+        function closeModals() {
+            document.getElementById('approveModal').classList.add('hidden');
+            document.getElementById('rejectModal').classList.add('hidden');
+            document.getElementById('requestInfoModal').classList.add('hidden');
+        }
+
+        function openApproveModal() {
+            if (!currentClaim) return;
+            document.getElementById('modal-approve-gross').innerText = formatINR(currentClaim.claimedAmount);
+            calculateNetPayout();
+            document.getElementById('approveModal').classList.remove('hidden');
+        }
+
+        function calculateNetPayout() {
+            if (!currentClaim) return;
+            const gross = currentClaim.claimedAmount;
+            const ded = parseFloat(document.getElementById('approveDeductible').value) || 0;
+            const net = Math.max(0, gross - ded);
+            document.getElementById('modal-approve-net').innerText = formatINR(net);
+        }
+
+        function openRejectModal() {
+            document.getElementById('rejectModal').classList.remove('hidden');
+        }
+
+        function openRequestInfoModal() {
+            document.getElementById('requestInfoModal').classList.remove('hidden');
+        }
+
+        async function triggerStartReview() {
+            if (!currentClaim) return;
+            try {
+                const updated = await ClaimGuardAPI.startReview(currentClaim.id, 'Priya Sharma');
+                renderClaimDossier(updated);
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        async function submitApproval() {
+            if (!currentClaim) return;
+            const remarks = document.getElementById('approveRemarks').value;
+            const deductible = parseFloat(document.getElementById('approveDeductible').value) || 0;
+            try {
+                const updated = await ClaimGuardAPI.approveClaim(currentClaim.id, remarks, deductible);
+                closeModals();
+                renderClaimDossier(updated);
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        async function submitRejection() {
+            if (!currentClaim) return;
+            const code = document.getElementById('rejectReasonCode').value;
+            const remarks = document.getElementById('rejectRemarks').value;
+            try {
+                const updated = await ClaimGuardAPI.rejectClaim(currentClaim.id, code, remarks);
+                closeModals();
+                renderClaimDossier(updated);
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        async function submitRequestInfo() {
+            if (!currentClaim) return;
+            const query = document.getElementById('infoQuery').value;
+            try {
+                const updated = await ClaimGuardAPI.requestMoreInfo(currentClaim.id, query);
+                closeModals();
+                renderClaimDossier(updated);
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        function renderClaimDossier(claim) {
+            currentClaim = claim;
+
+            document.getElementById('breadcrumb-claim-ref').innerText = claim.claimReference;
+            document.getElementById('dossier-claim-ref').innerText = claim.claimReference;
+            document.getElementById('dossier-policy-num').innerText = claim.policyNumber;
+            document.getElementById('dossier-claimant-name').innerText = claim.claimantName;
+            document.getElementById('dossier-date').innerText = new Date(claim.submissionDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+            document.getElementById('dossier-claim-amount').innerText = formatINR(claim.claimedAmount);
+            document.getElementById('dossier-claim-type').innerText = claim.claimType;
+            document.getElementById('dossier-location').innerText = claim.incidentLocation || 'Not specified';
+            document.getElementById('dossier-phone').innerText = claim.contactPhone || '—';
+            document.getElementById('dossier-email').innerText = claim.contactEmail || '—';
+            document.getElementById('dossier-vehicle-reg').innerText = claim.vehicleRegNumber || 'N/A';
+            document.getElementById('dossier-narrative').innerText = claim.incidentDescription || 'No narrative provided.';
+            document.getElementById('dossier-reviewer-label').innerText = claim.assignedReviewer || 'Unassigned';
+
+            // Status Badge
+            const statusContainer = document.getElementById('dossier-status-badge');
+            statusContainer.innerText = claim.status.replace(/_/g, ' ');
+
+            // Approved amount display if approved
+            const approvedWrapper = document.getElementById('dossier-approved-wrapper');
+            if (claim.status === 'APPROVED' && claim.approvedAmount != null) {
+                document.getElementById('dossier-approved-amount').innerText = formatINR(claim.approvedAmount);
+                approvedWrapper.classList.remove('hidden');
+            } else {
+                approvedWrapper.classList.add('hidden');
+            }
+
+            // Priority Badge
+            const prioBadge = document.getElementById('dossier-priority-badge');
+            prioBadge.innerText = claim.riskPriority + ' Risk';
+            if (claim.riskPriority === 'HIGH') {
+                prioBadge.className = "px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-error-container text-on-error-container";
+            } else if (claim.riskPriority === 'MEDIUM') {
+                prioBadge.className = "px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-amber-100 text-amber-800";
+            } else {
+                prioBadge.className = "px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-emerald-100 text-emerald-800";
+            }
+
+            // Documents
+            const docsList = document.getElementById('dossier-documents-list');
+            if (claim.documents && claim.documents.length > 0) {
+                docsList.innerHTML = claim.documents.map(doc => `
+                    <div class="p-space-md rounded-lg bg-surface-container-low flex items-center justify-between hover:bg-surface-container transition-colors">
+                        <div class="flex items-center gap-space-md min-w-0">
+                            <div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary flex items-center justify-center font-bold text-xs shrink-0">
+                                PDF
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="font-body-md text-body-md font-medium text-on-surface truncate">${escapeHtml(doc.fileName)}</span>
+                                <div class="flex items-center gap-2 font-code-audit text-code-audit text-secondary text-xs">
+                                    <span>${doc.documentType}</span>
+                                    <span>•</span>
+                                    <span>SHA-256 Validated</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                docsList.innerHTML = `<div class="p-4 rounded-lg bg-surface-container-low text-xs text-outline text-center">No documents currently attached to this claim.</div>`;
+            }
+
+            // Indicators
+            const indicatorsList = document.getElementById('dossier-indicators-list');
+            const indicators = claim.suspiciousIndicators || [];
+            document.getElementById('dossier-warnings-count').innerText = `${indicators.length} Flags`;
+
+            if (indicators.length > 0) {
+                indicatorsList.innerHTML = indicators.map(ind => `
+                    <div class="p-space-md rounded-lg bg-surface-container-low flex flex-col gap-1 border-l-4 ${ind.severity === 'HIGH' ? 'border-red-500' : ind.severity === 'MEDIUM' ? 'border-amber-500' : 'border-blue-500'}">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[18px] ${ind.severity === 'HIGH' ? 'text-red-600' : 'text-amber-600'}">warning</span>
+                                <span class="font-label-md text-label-md font-semibold text-on-surface">${escapeHtml(ind.title)}</span>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[11px] font-mono font-semibold ${ind.severity === 'HIGH' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'}">${escapeHtml(ind.ruleCode)}</span>
+                        </div>
+                        <p class="text-xs text-secondary pl-6 leading-relaxed">${escapeHtml(ind.description)}</p>
+                    </div>
+                `).join('');
+            } else {
+                indicatorsList.innerHTML = `
+                    <div class="p-4 rounded-lg bg-emerald-50 text-emerald-800 flex items-center gap-2 text-xs font-semibold">
+                        <span class="material-symbols-outlined text-lg">check_circle</span>
+                        <span>Zero heuristic flags triggered. Compliant with automated baseline rules.</span>
+                    </div>
+                `;
+            }
+
+            // Timeline History
+            const historyTimeline = document.getElementById('dossier-history-timeline');
+            const history = claim.reviewHistories || [];
+            if (history.length > 0) {
+                historyTimeline.innerHTML = history.map(item => `
+                    <div class="relative pl-4">
+                        <span class="absolute -left-[9px] top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-white"></span>
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-on-surface">${escapeHtml(item.actionType)}</span>
+                            <span class="text-outline">${new Date(item.actionTimestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} • ${new Date(item.actionTimestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
+                        </div>
+                        <p class="text-xs text-secondary mt-0.5 font-medium">By: ${escapeHtml(item.reviewerName || 'System')}</p>
+                        <p class="text-xs text-on-surface mt-1 bg-surface-container-low p-2 rounded">${escapeHtml(item.reviewerRemarks || 'No remarks logged.')}</p>
+                    </div>
+                `).join('');
+            }
+
+            // Button visibility based on resolved state
+            const actionContainer = document.getElementById('action-buttons-container');
+            const startReviewBtn = document.getElementById('btn-start-review');
+            if (claim.status === 'APPROVED' || claim.status === 'REJECTED') {
+                actionContainer.innerHTML = `
+                    <div class="p-4 rounded-xl ${claim.status === 'APPROVED' ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800'} text-center text-sm font-semibold">
+                        This claim is officially ${claim.status}. Adjudication workflow is resolved.
+                    </div>
+                `;
+            } else if (claim.status === 'UNDER_REVIEW') {
+                if (startReviewBtn) startReviewBtn.classList.add('hidden');
+            }
+        }
+
+        function formatINR(val) {
+            return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val || 0);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const claimId = urlParams.get('id') || 1;
+
+            try {
+                const claim = await ClaimGuardAPI.getClaimById(claimId);
+                renderClaimDossier(claim);
+            } catch (err) {
+                document.querySelector('main').innerHTML = `
+                    <div class="p-12 text-center text-error flex flex-col items-center justify-center gap-3">
+                        <span class="material-symbols-outlined text-4xl">error</span>
+                        <h2 class="text-xl font-bold">Failed to load Claim Dossier</h2>
+                        <p class="text-sm text-secondary">${escapeHtml(err.message)}</p>
+                        <a href="/claims.html" class="mt-4 px-4 py-2 rounded-lg bg-primary text-white text-xs font-semibold">Return to Claims Directory</a>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

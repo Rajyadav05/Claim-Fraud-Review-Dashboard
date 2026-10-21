@@ -1,4 +1,4 @@
-# Claim Fraud Review Dashboard
+# ClaimGuard — Claim Fraud Review Dashboard
 
 > **College DevOps Project** | Jenkins Deployment for a Claim Fraud Review Dashboard
 
@@ -6,110 +6,125 @@
 
 ## Project Description
 
-A web-based insurance **Claim Fraud Review Dashboard** that allows operators to submit insurance claims, surfaces rule-based suspicious indicators for trained reviewers, captures structured approve/reject decisions with mandatory remarks, and maintains an immutable audit trail of every review action.
+A web-based insurance **Claim Fraud Review Dashboard** that allows operators to submit insurance claims, surfaces deterministic heuristic suspicious indicators for trained reviewers, captures structured approve/reject decisions with mandatory remarks, and maintains an immutable audit trail of review actions.
 
-The application is the subject of a college DevOps module assignment. The primary technical deliverable is a fully automated **Jenkins CI/CD pipeline** that builds, tests, containerises, and deploys the application using Docker and Ansible — demonstrating the complete software delivery lifecycle from requirements through to automated deployment.
+The application is the subject of a college DevOps module assignment. The primary technical deliverable is an automated **Jenkins CI/CD pipeline** that compiles, tests, containerises, and deploys the application using Docker and Ansible — demonstrating the complete software delivery lifecycle from requirements through to automated deployment.
 
-> **Note:** All claim data used in this project is **synthetic**. No real policyholder data is used at any stage.<br>
-> Suspicious-indicator flags are decision-support signals only and do not constitute proof of fraud.<br>
-> Implementation, testing, and deployment have **not yet been performed or verified** as of the current development stage.
-
----
-
-## Project Objectives
-
-1. Design a functional Claim Fraud Review Dashboard supporting claim submission, rule-based indicator display, reviewer decisions, and audit history.
-2. Implement a Jenkins CI/CD pipeline that automatically builds, tests, and deploys the application on every code push.
-3. Containerise the application using Docker to ensure environment consistency across all stages.
-4. Automate environment provisioning using Ansible to eliminate manual configuration steps.
-5. Demonstrate end-to-end automated testing using Selenium WebDriver and JUnit covering critical user workflows.
-6. Design the frontend UI in Google Stitch before implementation and inspect exported files before choosing the final integration approach.
-7. Maintain clear, version-controlled documentation for each of the fourteen assignment tasks.
-8. Use only synthetic data throughout the project.
+> **Important Notices:**<br>
+> 1. All claim data used in this project is strictly **synthetic**. No real policyholder data is used at any stage.<br>
+> 2. Suspicious-indicator flags are decision-support heuristics only and do not constitute proof of fraud or conclusive determination.<br>
+> 3. Physical file storage is simulated at the metadata level during MVP development.<br>
+> 4. **Educational Prototype:** This application is an educational prototype developed for a college DevOps curriculum and is not intended or certified for production claims operations.<br>
+> 5. **H2 In-Memory Persistence:** Uses embedded H2 in-memory storage (`jdbc:h2:mem:claimguard`). All database records are transient, existing in RAM only for the lifetime of the process, and completely reset upon process stop or restart; baseline synthetic claims are automatically re-seeded on application startup.<br>
+> 6. **Testing Scope:** Current automated testing covers unit, business domain, and Spring MVC integration layers (11 automated tests via JUnit 5, Mockito, and MockMvc). End-to-end interactive browser testing via Selenium WebDriver is explicitly deferred to Task 9 in accordance with the project roadmap.
 
 ---
 
-## Planned Technology Stack
+## Technology Stack
 
-| Layer | Technology | Version / Notes |
-|-------|-----------|----------------|
-| **Language** | Java | 21 (LTS) |
-| **Framework** | Spring Boot | Latest stable |
-| **Build Tool** | Apache Maven | Latest stable |
-| **Frontend** | Thymeleaf (server-side) or separate frontend | Decision pending Stitch export inspection |
-| **UI Design** | Google Stitch | Design phase only |
-| **Database** | H2 (in-memory) | Synthetic seed data; file mode for demos |
-| **Version Control** | Git + GitHub | Feature branch workflow |
-| **CI/CD** | Jenkins | Pipeline-as-code via `Jenkinsfile` |
-| **Testing (Unit/Integration)** | JUnit 5 | Integrated into Maven build |
-| **Testing (E2E)** | Selenium WebDriver | Browser-driven; integrated into Jenkins |
-| **Containerisation** | Docker | Multi-stage Dockerfile |
-| **Configuration Management** | Ansible | Playbooks for environment setup and deployment |
-
-> All tools are open-source or freely available under licences compatible with academic use.
+| Layer | Technology | Version / Configuration | Implementation Status |
+|-------|-----------|-------------------------|-----------------------|
+| **Language** | Java | OpenJDK 21 LTS | Implemented |
+| **Framework** | Spring Boot | 3.3.4 (REST API + Static Serving) | Implemented |
+| **Build Tool** | Apache Maven | 3.10.0 + Maven Wrapper (`mvnw`) | Implemented |
+| **Persistence** | H2 Database | In-Memory (`jdbc:h2:mem:claimguard`) | Implemented |
+| **Frontend UI** | HTML5 / Vanilla JS / Tailwind CDN | Google Stitch Design Reference Adaptation | Implemented |
+| **UI Reference** | Google Stitch | 4 Reference Screens under `docs/stitch-export/` | Preserved Ground Truth |
+| **Testing** | JUnit 5 + Mockito + MockMvc | 11 Automated Tests | Implemented |
+| **Version Control** | Git + GitHub | Feature branch: `feature/claim-review-mvp` | In Progress |
+| **CI/CD** | Jenkins | Automated build, test, and package pipeline | Planned (Task 7+) |
+| **Containerisation** | Docker | Multi-stage Dockerfile packaging | Planned (Task 10+) |
+| **Configuration** | Ansible | Playbooks for automated provisioning | Planned (Task 12+) |
+| **E2E Testing** | Selenium WebDriver | Automated critical journey testing | Planned (Task 9+) |
 
 ---
 
-## Current Development Stage
+## Current Development Stage: Task 5 — Feature Development with Branching
 
-**Task 1 — Problem Definition and Scope** *(In Progress)*
-
-- [x] `docs/task-01-problem-definition.md` created — covers problem statement, stakeholders, requirements, risks, success criteria, MVP scope, and alignment with all 14 tasks.
-- [x] `README.md` created — project overview and planned milestones.
-- [ ] Manual verification by student pending.
-- [ ] Git commit and push pending.
-
-No application code has been written. No tests have been run. No pipeline has been configured. No software has been installed as part of this project.
+- **Active Branch:** `feature/claim-review-mvp`
+- **Initial Baseline Commit:** `02386fe252b38e2a0e1783cff04b77f756ab7fdc`
+- **Implemented Work:**
+  - Standard Spring Boot 3.3.4 project layout using Java 21 and Maven.
+  - Relational entities: `Claim`, `ClaimDocument`, `SuspiciousIndicator`, `ReviewHistory`.
+  - Spring Data JPA repositories and embedded H2 database configuration.
+  - Deterministic heuristic rule evaluation engine (`IndicatorRuleEngine`) evaluating 5 business rules:
+    - `RUL-AMT-01`: High Value Claim Threshold (≥ ₹1,50,000)
+    - `RUL-TIM-01`: Delayed Incident Reporting (> 48 hours)
+    - `RUL-MTR-04`: Parts Benchmark Discrepancy (> ₹1,00,000)
+    - `RUL-DUP-01`: Duplicate Claim Submission Detection
+    - `RUL-DOC-02`: Missing Mandatory Supporting Documents
+  - REST API controllers for Claims, Reviews, and Health monitoring.
+  - Synthetic data seeder initializing 5 realistic test claims covering diverse lifecycle states (`SUBMITTED`, `UNDER_REVIEW`, `MORE_INFO_REQUIRED`, `APPROVED`, `REJECTED`).
+  - Adapted frontend static web console (`index.html`, `claims.html`, `submit.html`, `review.html`) with localized SVG branding and responsive async REST integration.
+  - Comprehensive unit and integration test suite passing 100% of tests.
 
 ---
 
-## Planned Future Milestones
+## Local Run Instructions
+
+### Prerequisites
+- **Java Development Kit (JDK):** OpenJDK 21 LTS installed (`JAVA_HOME` configured).
+- **Maven:** Version 3.9+ or use the included Maven Wrapper (`.\mvnw`).
+
+### 1. Build and Run Tests
+From the project root:
+```powershell
+.\mvnw test
+```
+
+### 2. Package Executable JAR
+```powershell
+.\mvnw clean package
+```
+
+### 3. Run Application Locally
+```powershell
+.\mvnw spring-boot:run
+```
+Or execute the packaged JAR directly:
+```powershell
+java -jar target/claimguard-dashboard-1.0.0-SNAPSHOT.jar
+```
+
+The server starts by default on port `8080`.
+
+---
+
+## Application URL and Endpoints
+
+| URL | Component / Purpose |
+|-----|-------------------|
+| `http://localhost:8080/` | Operations Executive Dashboard (`index.html`) |
+| `http://localhost:8080/claims.html` | All Claims Directory & Filter View |
+| `http://localhost:8080/submit.html` | Submit New Claim Intake Portal |
+| `http://localhost:8080/review.html?id=1` | Claim Details & Forensic Adjudication Console |
+| `http://localhost:8080/api/health` | Application Health Probe (`{"status":"UP",...}`) |
+| `http://localhost:8080/actuator/health` | Spring Boot Actuator Health Probe |
+| `http://localhost:8080/api/claims` | Claims List / Search REST Endpoint |
+| `http://localhost:8080/api/claims/{id}` | Claim Detail REST Endpoint |
+| `http://localhost:8080/h2-console` | H2 In-Memory Database Web Console (JDBC: `jdbc:h2:mem:claimguard`, User: `sa`) |
+
+---
+
+## Assignment Task Roadmap
 
 | Task | Title | Status |
 |------|-------|--------|
-| Task 01 | Problem Definition and Scope | **In Progress** |
-| Task 02 | UI/UX Design (Google Stitch) | Not started |
-| Task 03 | Frontend Integration | Not started |
-| Task 04 | Backend Development (Spring Boot) | Not started |
-| Task 05 | Database Design and Seed Data | Not started |
-| Task 06 | Version Control and Branching Strategy | Not started |
-| Task 07 | Jenkins Pipeline Setup | Not started |
-| Task 08 | Automated Testing (Unit + Integration) | Not started |
-| Task 09 | Selenium End-to-End Tests | Not started |
-| Task 10 | Docker Containerisation | Not started |
-| Task 11 | Jenkins + Docker Integration | Not started |
-| Task 12 | Ansible Configuration Management | Not started |
-| Task 13 | Full Pipeline Demonstration | Not started |
-| Task 14 | Project Retrospective and Lessons Learned | Not started |
-
-Each task will have a corresponding document in the `docs/` directory. No task will be marked complete until the document is committed, evidence has been captured, and manual verification has been performed.
+| Task 01 | Problem Definition and Scope | **Completed** (`docs/task-01-problem-definition.md`) |
+| Task 02 | Agile Planning and DevOps Workflow | **Completed** (`docs/task-02-agile-planning.md`) |
+| Task 03 | Requirements, Architecture and Technology Setup | **Completed** (`docs/task-03-requirements-architecture.md`) |
+| Task 04 | Git and GitHub Repository Initialization | **Completed** (`main` pushed to GitHub) |
+| Task 05 | Feature Development with Branching | **In Progress** (`feature/claim-review-mvp`) |
+| Task 06 | Code Review and Branch Merging | Planned |
+| Task 07 | Jenkins Pipeline Setup (CI Build & Test) | Planned |
+| Task 08 | Automated Testing Pipeline Integration | Planned |
+| Task 09 | Selenium End-to-End Automated Testing | Planned |
+| Task 10 | Docker Container Packaging | Planned |
+| Task 11 | Jenkins + Docker Automated Pipeline | Planned |
+| Task 12 | Ansible Configuration Management | Planned |
+| Task 13 | Full CI/CD Pipeline Demonstration | Planned |
+| Task 14 | Project Retrospective and Viva Preparation | Planned |
 
 ---
 
-## Repository Structure (Planned)
-
-```
-Claim-Fraud-Review-Dashboard/
-├── README.md
-├── docs/
-│   ├── task-01-problem-definition.md   ← Current task
-│   ├── task-02-ui-design.md
-│   ├── task-03-frontend.md
-│   └── ...
-├── src/                                ← Java/Spring Boot source (Task 04+)
-├── Jenkinsfile                         ← CI/CD pipeline definition (Task 07+)
-├── Dockerfile                          ← Container definition (Task 10+)
-└── ansible/                            ← Ansible playbooks (Task 12+)
-```
-
----
-
-## Important Notices
-
-- **No results have been fabricated.** All success criteria in `docs/task-01-problem-definition.md` are labelled as planned targets.
-- **No software has been installed, configured, or run** as part of this project at this stage.
-- **Frontend integration approach is undecided.** The Google Stitch export will be inspected in Task 2 before the approach (Thymeleaf vs. separate frontend) is finalised.
-
----
-
-*Claim Fraud Review Dashboard | College DevOps Assignment | Raj Yadav | 2026*
+*ClaimGuard — Claim Fraud Review Dashboard | College DevOps Assignment | Raj Yadav | 2026*

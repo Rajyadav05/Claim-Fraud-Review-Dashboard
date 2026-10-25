@@ -4,6 +4,7 @@ import com.claimguard.dashboard.dto.ClaimDetailDTO;
 import com.claimguard.dashboard.dto.ClaimSummaryDTO;
 import com.claimguard.dashboard.dto.CreateClaimRequest;
 import com.claimguard.dashboard.dto.DocumentMetadataRequest;
+import com.claimguard.dashboard.dto.SuspiciousIndicatorDTO;
 import com.claimguard.dashboard.entity.ClaimStatus;
 import com.claimguard.dashboard.entity.ReviewHistory;
 import com.claimguard.dashboard.entity.RiskPriority;
@@ -65,7 +66,7 @@ public class ClaimController {
     }
 
     @GetMapping("/{id}/indicators")
-    public ResponseEntity<List<SuspiciousIndicator>> getIndicators(@PathVariable Long id) {
+    public ResponseEntity<List<SuspiciousIndicatorDTO>> getIndicators(@PathVariable Long id) {
         return ResponseEntity.ok(claimService.getClaimIndicators(id));
     }
 

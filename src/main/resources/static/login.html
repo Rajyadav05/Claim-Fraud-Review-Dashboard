@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="web_dashboard" name="shell-type"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <title>ClaimGuard — Enterprise Fraud Ops Sign In</title>
+
+    <!-- Design System Typography & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+    <link href="/css/claimguard-theme.css?v=2.4.1" rel="stylesheet"/>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-high": "#e6e8ea",
+                        "inverse-primary": "#b7c4ff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container": "#eceef0",
+                        "on-error-container": "#93000a",
+                        "secondary": "#565e74",
+                        "secondary-container": "#dae2fd",
+                        "background": "#f7f9fb",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary": "#0037b0",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "outline": "#747686",
+                        "outline-variant": "#c4c5d7",
+                        "surface-container-low": "#f2f4f6",
+                        "primary-container": "#1d4ed8",
+                        "on-secondary-fixed": "#131b2e",
+                        "error": "#ba1a1a"
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                    fontFamily: {
+                        "body-md": ["Inter"], "label-md": ["Inter"], "headline-xl": ["Inter"],
+                        "code-audit": ["Inter"], "headline-md": ["Inter"]
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="bg-background font-body-md text-on-surface antialiased min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-md w-full flex flex-col gap-space-lg">
+        <!-- Brand Header -->
+        <div class="flex items-center justify-center gap-3">
+            <img alt="ClaimGuard Logo" class="h-10 w-auto object-contain" src="/assets/claimguard-logo.svg"/>
+            <div class="flex flex-col">
+                <span class="font-headline-xl text-2xl font-bold text-on-secondary-fixed leading-tight">ClaimGuard</span>
+                <span class="font-code-audit text-xs text-secondary uppercase tracking-widest">Enterprise Fraud Ops</span>
+            </div>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="bg-surface-container-lowest rounded-2xl p-8 shadow-xl border border-surface-container flex flex-col gap-6">
+            <div class="flex flex-col gap-1 text-center">
+                <h1 class="font-headline-xl text-xl font-bold text-on-surface">Adjudication Console Sign In</h1>
+                <p class="text-sm text-secondary">Authenticate with your assigned operator or reviewer credentials</p>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="login-error-banner" class="hidden p-3 rounded-lg bg-error-container text-on-error-container text-sm flex items-start gap-2 border border-error/20">
+                <span class="material-symbols-outlined text-error text-[18px] mt-0.5">error</span>
+                <span id="login-error-text">Invalid username or password.</span>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="flex flex-col gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold uppercase tracking-wider text-secondary" for="username">Username / ID</label>
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">account_circle</span>
+                        <input id="username" name="username" class="w-full h-11 pl-10 pr-3 rounded-lg bg-surface-container-low text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary-container border border-transparent focus:border-primary-container font-medium" placeholder="e.g. priya.sharma or admin" required type="text" autocomplete="username" autofocus/>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold uppercase tracking-wider text-secondary" for="password">Password</label>
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">lock</span>
+                        <input id="password" name="password" class="w-full h-11 pl-10 pr-3 rounded-lg bg-surface-container-low text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary-container border border-transparent focus:border-primary-container font-medium" placeholder="••••••••••••" required type="password" autocomplete="current-password"/>
+                    </div>
+                </div>
+
+                <button id="login-btn" class="h-11 mt-2 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer" type="submit">
+                    <span class="material-symbols-outlined text-[18px]">login</span>
+                    <span>Sign In to Operations Console</span>
+                </button>
+            </form>
+
+            <div class="pt-2 border-t border-surface-container flex flex-col gap-1.5 text-center text-xs text-secondary">
+                <div class="flex items-center justify-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                    <span>Role-Based Access: <strong>REVIEWER</strong> or <strong>ADMIN</strong></span>
+                </div>
+                <span>Session state is secured and audited per enterprise governance.</span>
+            </div>
+        </div>
+
+        <div class="text-center text-xs text-outline font-code-audit">
+            ClaimGuard v1.0 • College DevOps Staging Edition
+        </div>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        // Initialize and preheat CSRF token metadata immediately on load
+        async function fetchCsrfMetadata() {
+            try {
+                const res = await fetch('/api/auth/csrf');
+                if (res.ok) {
+                    return await res.json();
+                }
+            } catch (err) {
+                console.warn('Failed to preheat CSRF token:', err);
+            }
+            return null;
+        }
+
+        let csrfPromise = fetchCsrfMetadata();
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const errorBanner = document.getElementById('login-error-banner');
+            const errorText = document.getElementById('login-error-text');
+            const loginBtn = document.getElementById('login-btn');
+
+            errorBanner.classList.add('hidden');
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[18px]">sync</span><span>Authenticating...</span>';
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                // Await CSRF initialization before submitting login
+                let csrfData = await csrfPromise;
+                if (!csrfData || !csrfData.token) {
+                    csrfData = await fetchCsrfMetadata();
+                }
+
+                const xsrfToken = (csrfData && csrfData.token) ? csrfData.token : getCookie('XSRF-TOKEN');
+                const headerName = (csrfData && csrfData.headerName) ? csrfData.headerName : 'X-XSRF-TOKEN';
+                const paramName = (csrfData && csrfData.parameterName) ? csrfData.parameterName : '_csrf';
+
+                const formData = new URLSearchParams();
+                formData.append('username', username);
+                formData.append('password', password);
+                if (xsrfToken) {
+                    formData.append(paramName, xsrfToken);
+                }
+
+                const headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                };
+                if (xsrfToken) {
+                    headers[headerName] = xsrfToken;
+                }
+
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: headers,
+                    body: formData.toString()
+                });
+
+                if (res.ok) {
+                    const params = new URLSearchParams(window.location.search);
+                    const target = params.get('redirect') || '/index.html';
+                    window.location.href = target;
+                } else {
+                    const data = await res.json().catch(() => ({}));
+                    errorBanner.classList.remove('hidden');
+                    errorText.textContent = data.detail || 'Invalid username or password.';
+                    // Refresh token for subsequent retry
+                    csrfPromise = fetchCsrfMetadata();
+                }
+            } catch (err) {
+                errorBanner.classList.remove('hidden');
+                errorText.textContent = 'Network communication failure. Please verify backend is running.';
+                csrfPromise = fetchCsrfMetadata();
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">login</span><span>Sign In to Operations Console</span>';
+            }
+        });
+    </script>
+</body>
+</html>

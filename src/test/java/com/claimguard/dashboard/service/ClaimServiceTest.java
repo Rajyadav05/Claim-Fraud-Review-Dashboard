@@ -19,11 +19,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
+import com.claimguard.dashboard.dto.SuspiciousIndicatorDTO;
+import com.claimguard.dashboard.exception.ResourceNotFoundException;
+import com.claimguard.dashboard.repository.SuspiciousIndicatorRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ClaimServiceTest {
@@ -36,6 +41,9 @@ class ClaimServiceTest {
 
     @Mock
     private ReviewHistoryRepository historyRepository;
+
+    @Mock
+    private SuspiciousIndicatorRepository indicatorRepository;
 
     @Mock
     private IndicatorRuleEngine ruleEngine;
@@ -118,5 +126,31 @@ class ClaimServiceTest {
 
         assertThrows(InvalidStateTransitionException.class, () ->
                 claimService.approveClaim(1L, "remarks", BigDecimal.ZERO));
+    }
+
+    @Test
+    @DisplayName("Get Indicators: Returns mapped SuspiciousIndicatorDTO list when claim exists")
+    void shouldReturnClaimIndicatorsSuccessfully() {
+        when(claimRepository.existsById(1L)).thenReturn(true);
+        SuspiciousIndicator ind = new SuspiciousIndicator("RUL-AMT-01", "High Value", RiskPriority.HIGH, "Amount >= 150000", LocalDateTime.now());
+        ind.setId(10L);
+        when(indicatorRepository.findByClaimId(1L)).thenReturn(List.of(ind));
+
+        List<SuspiciousIndicatorDTO> indicators = claimService.getClaimIndicators(1L);
+
+        assertNotNull(indicators);
+        assertEquals(1, indicators.size());
+        assertEquals("RUL-AMT-01", indicators.get(0).getRuleCode());
+        assertEquals("High Value", indicators.get(0).getTitle());
+        assertEquals(RiskPriority.HIGH, indicators.get(0).getSeverity());
+    }
+
+    @Test
+    @DisplayName("Get Indicators: Throws ResourceNotFoundException when claim does not exist")
+    void shouldThrowNotFoundWhenClaimIndicatorsClaimMissing() {
+        when(claimRepository.existsById(999L)).thenReturn(false);
+
+        assertThrows(ResourceNotFoundException.class, () ->
+                claimService.getClaimIndicators(999L));
     }
 }

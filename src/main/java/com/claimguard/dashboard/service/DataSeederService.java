@@ -3,12 +3,14 @@ package com.claimguard.dashboard.service;
 import com.claimguard.dashboard.entity.*;
 import com.claimguard.dashboard.repository.ClaimRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Component
+@Order(2)
 public class DataSeederService implements CommandLineRunner {
 
     private final ClaimRepository claimRepository;

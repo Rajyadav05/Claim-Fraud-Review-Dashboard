@@ -37,6 +37,9 @@ public class ReviewHistory {
     @Column(name = "action_timestamp", nullable = false)
     private LocalDateTime actionTimestamp;
 
+    @Column(name = "source_event_id", length = 100)
+    private String sourceEventId;
+
     public ReviewHistory() {
     }
 
@@ -111,5 +114,13 @@ public class ReviewHistory {
 
     public void setActionTimestamp(LocalDateTime actionTimestamp) {
         this.actionTimestamp = actionTimestamp;
+    }
+
+    public String getSourceEventId() {
+        return sourceEventId;
+    }
+
+    public void setSourceEventId(String sourceEventId) {
+        this.sourceEventId = sourceEventId;
     }
 }

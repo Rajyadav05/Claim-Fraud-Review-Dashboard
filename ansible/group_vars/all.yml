@@ -1,0 +1,26 @@
+# ==============================================================================
+# Ansible Group Variables for ClaimGuard Fraud Review Dashboard
+# Task 13: Configuration Management Defaults
+# ==============================================================================
+
+claimguard_app_name: "claimguard-dashboard"
+claimguard_container_name: "claimguard-ansible"
+claimguard_image: "claimguard:staging"
+claimguard_host_port: 8084
+claimguard_container_port: 8080
+claimguard_health_url: "http://localhost:8084/api/health"
+claimguard_root_url: "http://localhost:8084/"
+claimguard_health_timeout: 45
+claimguard_docker_bin: "/mnt/c/Users/User/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe"
+
+# Port Safety Guardrails: These ports are reserved and MUST never be overwritten
+protected_ports:
+  - 8080  # Local Spring Boot Dev & E2E ephemeral
+  - 8081  # Jenkins Controller
+  - 8082  # Task 11 Reference Container (claimguard-task11)
+  - 8083  # Task 12 Staging Container (claimguard-staging)
+
+# Protected Container Identifiers
+protected_containers:
+  - "claimguard-task11"
+  - "claimguard-staging"

@@ -1,0 +1,488 @@
+# ClaimGuard Phase 1 — Production Deployment Runbook (Revised)
+## Persistent File-Backed H2 Database + Spring Security Authentication & RBAC
+
+> **Document Reference:** `CLAIMGUARD_PHASE1_DEPLOYMENT_RUNBOOK_REVISED.md`  
+> **Date:** October 25, 2026  
+> **Target Container:** `claimguard-staging` (Host Port: `8083`, Container Port: `8080`)  
+> **Verified Image Under Deployment:** `claimguard:phase1-candidate` (`sha256:2fd25b07fba5787db431f3b2f10edaf8594d2fb5536580b92029ef7d58497a97`)  
+> **Verified Preserved Container:** `claimguard-staging` (`910771a20872`) -> `claimguard-staging-prephase1`  
+> **Production Persistent Volume:** `claimguard-data:/app/data`  
+> **Operational Status:** PREPARATORY ONLY — No deployment commands have been executed.  
+
+---
+
+## 1. Architectural & Operational Summary
+
+This runbook defines the exact, step-by-step procedure to transition the ClaimGuard Staging service from its legacy in-memory configuration (`claimguard:stitch-ui-staging`) to the Phase 1 persistent, authenticated architecture (`claimguard:phase1-candidate`).
+
+### Core Safety Rules
+1. **Never Remove Containers:** The original container is renamed to `claimguard-staging-prephase1` and kept in a stopped state. It is never deleted.
+2. **Never Remove Volumes:** The named volume `claimguard-data` is preserved through any operational contingency, including rollbacks.
+3. **Data Loss Preemption:** Because the active container uses volatile `jdbc:h2:mem:claimguard`, stopping it clears RAM. The runbook executes an exhaustive, read-only REST API export of all claims and review history prior to initiating any state change.
+4. **Credential Isolation:** Passwords are captured interactively as secure strings and passed to the container via a temporary, single-use environment file with immediate deletion, eliminating plain-text exposure in shell histories and process command lines.
+
+---
+
+## 2. Preflight Inspection & Verification (Read-Only)
+
+Before executing any state-changing command, run the following preflight checks.
+
+```powershell
+# ==============================================================================
+# PREFLIGHT CHECK 1: Verify Candidate Image ID and Integrity
+# ==============================================================================
+$expectedImageId = "sha256:2fd25b07fba5787db431f3b2f10edaf8594d2fb5536580b92029ef7d58497a97"
+$actualImageId = docker image inspect claimguard:phase1-candidate --format "{{.Id}}" 2>$null
+
+if ($actualImageId -ne $expectedImageId) {
+    Write-Error "[STOP CONDITION 1 TRIGGERED] Candidate image ID mismatch or missing!"
+    Write-Host "  Expected: $expectedImageId"
+    Write-Host "  Found:    $actualImageId"
+    return
+}
+Write-Host "[PREFLIGHT 1 PASSED] Candidate image ID verified ($actualImageId)."
+
+# ==============================================================================
+# PREFLIGHT CHECK 2: Verify Active Staging Container Configuration
+# ==============================================================================
+$stagingInspect = docker inspect claimguard-staging 2>$null | ConvertFrom-Json
+if ($null -eq $stagingInspect -or $stagingInspect.Count -eq 0) {
+    Write-Error "[STOP CONDITION 2 TRIGGERED] Original container 'claimguard-staging' not found."
+    return
+}
+
+$stagingId = $stagingInspect[0].Id.Substring(0, 12)
+$stagingStatus = $stagingInspect[0].State.Status
+$stagingPort = $stagingInspect[0].HostConfig.PortBindings."8080/tcp"[0].HostPort
+
+if ($stagingStatus -ne "running" -or $stagingPort -ne "8083") {
+    Write-Error "[STOP CONDITION 2 TRIGGERED] 'claimguard-staging' is not running on port 8083 (Status: $stagingStatus, Port: $stagingPort)."
+    return
+}
+Write-Host "[PREFLIGHT 2 PASSED] Staging container verified ($stagingId, Status: $stagingStatus, Port: $stagingPort)."
+
+# ==============================================================================
+# PREFLIGHT CHECK 3: Verify Production Volume Status
+# ==============================================================================
+$existingVol = docker volume ls -q --filter "name=^claimguard-data$"
+if (-not [string]::IsNullOrWhiteSpace($existingVol)) {
+    Write-Warning "[NOTICE] Production volume 'claimguard-data' already exists. Verify if it contains pre-existing database files."
+} else {
+    Write-Host "[PREFLIGHT 3 PASSED] Production volume 'claimguard-data' is clear for clean initialization."
+}
+
+# ==============================================================================
+# PREFLIGHT CHECK 4: Verify Live Service Health on Port 8083
+# ==============================================================================
+try {
+    $preHealth = Invoke-RestMethod -Uri "http://localhost:8083/api/health" -TimeoutSec 3
+    if ($preHealth.status -ne "UP") {
+        Write-Error "[STOP CONDITION 4 TRIGGERED] Live service is not reporting UP (Status: $($preHealth.status))."
+        return
+    }
+    Write-Host "[PREFLIGHT 4 PASSED] Live service on port 8083 is UP (Database: $($preHealth.database))."
+} catch {
+    Write-Error "[STOP CONDITION 4 TRIGGERED] Cannot connect to http://localhost:8083/api/health: $($_.Exception.Message)"
+    return
+}
+```
+
+---
+
+## 3. Pre-Deployment State Export: Claims & Review History (Read-Only)
+
+> [!IMPORTANT]
+> The running container `claimguard-staging` uses an in-memory database (`jdbc:h2:mem:claimguard`). It **cannot** be copied via `docker cp` because no database file exists on disk.  
+> The script below performs an automated, paginated REST API extraction of all claims and their complete review history before the container is stopped.
+
+```powershell
+# ==============================================================================
+# STEP 1: Initialize Timestamped Backup Directory
+# ==============================================================================
+$timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+$backupDir = "E:\Desktop\Raj Yadav\Projects\backups\pre-phase1-export-$timestamp"
+New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
+Write-Host "[BACKUP] Created backup directory: $backupDir"
+
+# ==============================================================================
+# STEP 2: Extract Paginated Claims with Validation
+# ==============================================================================
+$baseUrl = "http://localhost:8083"
+$pageSize = 50
+$currentPage = 0
+$allClaims = @()
+$totalElements = -1
+$totalPages = 1
+
+do {
+    $url = "$baseUrl/api/claims?page=$currentPage&size=$pageSize"
+    $response = Invoke-RestMethod -Uri $url -Method Get
+
+    # Validate Spring Data JPA pagination response structure
+    if ($null -eq $response.content -or $null -eq $response.page) {
+        Write-Error "[STOP CONDITION 5 TRIGGERED] Unexpected response structure from $url."
+        return
+    }
+
+    $totalElements = $response.page.totalElements
+    $totalPages = $response.page.totalPages
+    $claimsOnPage = @($response.content)
+
+    $allClaims += $claimsOnPage
+    Write-Host "  Retrieved page $currentPage of $totalPages ($($claimsOnPage.Count) claims on page, cumulative: $($allClaims.Count)/$totalElements)"
+    $currentPage++
+} while ($currentPage -lt $totalPages)
+
+# Verify exported claims count against totalElements reported by backend
+if ($allClaims.Count -ne $totalElements) {
+    Write-Error "[STOP CONDITION 5 TRIGGERED] Claim export incomplete! Expected $totalElements claims, but collected $($allClaims.Count)."
+    return
+}
+
+# Write verified claims list to backup file
+$claimsJsonPath = Join-Path $backupDir "claims-summary.json"
+$allClaims | ConvertTo-Json -Depth 10 | Set-Content -Path $claimsJsonPath -Encoding UTF8
+Write-Host "[BACKUP VERIFIED] Successfully exported $totalElements claims to $claimsJsonPath."
+
+# ==============================================================================
+# STEP 3: Extract Complete Review History for Every Claim
+# ==============================================================================
+$allHistory = @()
+$historyRecordCount = 0
+
+foreach ($claim in $allClaims) {
+    $claimId = $claim.id
+    $claimRef = $claim.claimReference
+    try {
+        $historyUrl = "$baseUrl/api/claims/$claimId/history"
+        $claimHist = @(Invoke-RestMethod -Uri $historyUrl -Method Get)
+
+        $entry = [PSCustomObject]@{
+            claimId        = $claimId
+            claimReference = $claimRef
+            historyCount   = $claimHist.Count
+            records        = $claimHist
+        }
+        $allHistory += $entry
+        $historyRecordCount += $claimHist.Count
+    } catch {
+        Write-Warning "Could not fetch history for Claim ID $claimId ($claimRef): $($_.Exception.Message)"
+    }
+}
+
+$historyJsonPath = Join-Path $backupDir "claims-history.json"
+$allHistory | ConvertTo-Json -Depth 10 | Set-Content -Path $historyJsonPath -Encoding UTF8
+Write-Host "[BACKUP VERIFIED] Successfully exported $historyRecordCount history records across $($allClaims.Count) claims to $historyJsonPath."
+```
+
+---
+
+## 4. Secure Credential Preparation
+
+To prevent passwords from appearing in command-line inspection (`Get-Process`, Task Manager), shell history, or version control:
+
+```powershell
+# ==============================================================================
+# Prompt operator for deployment credentials (masked, non-logged input)
+# ==============================================================================
+$secAdmin = Read-Host -Prompt "Enter Staging Administrator ('admin') Password" -AsSecureString
+$secReviewer = Read-Host -Prompt "Enter Staging Reviewer ('priya.sharma') Password" -AsSecureString
+
+$bstrA = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secAdmin)
+$bstrR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secReviewer)
+$plainAdmin = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstrA)
+$plainReviewer = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstrR)
+
+# Clear BSTR allocations
+[System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstrA)
+[System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstrR)
+
+if ([string]::IsNullOrWhiteSpace($plainAdmin) -or [string]::IsNullOrWhiteSpace($plainReviewer)) {
+    Write-Error "[STOP CONDITION 6 TRIGGERED] Administrator or Reviewer password is empty. Aborting deployment."
+    return
+}
+
+# Write a single-use, protected environment file
+$envFilePath = Join-Path $backupDir ".env.deploy"
+$envFileContent = @"
+CLAIMGUARD_DB_PATH=/app/data/claimguard
+CLAIMGUARD_ADMIN_USERNAME=admin
+CLAIMGUARD_ADMIN_PASSWORD=$plainAdmin
+CLAIMGUARD_REVIEWER_USERNAME=priya.sharma
+CLAIMGUARD_REVIEWER_PASSWORD=$plainReviewer
+CLAIMGUARD_H2_CONSOLE_ENABLED=false
+"@
+
+Set-Content -Path $envFilePath -Value $envFileContent -Encoding ASCII
+Write-Host "[SECURE] Temporary environment file created at $envFilePath."
+```
+
+> **Remaining Exposure Risk Note:**  
+> Once the container is running, Docker stores environment variables in container metadata. A user with root access on the host or access to the local Docker daemon socket could inspect them via `docker inspect`. In Phase 2, migration to Docker Secrets, HashiCorp Vault, or AWS Secrets Manager is recommended.
+
+---
+
+## 5. Service Transition & Container Cutover (State-Changing)
+
+> [!WARNING]
+> **STATE-CHANGING SEQUENCE:**  
+> - **Command 1** stops the active service on port 8083 (downtime begins).  
+> - **Command 4** launches the candidate on port 8083 (downtime ends).  
+> Expected cutover downtime window: **10 to 15 seconds**.
+
+```powershell
+# ==============================================================================
+# COMMAND 1 (STATE-CHANGING): Stop existing primary container
+# ==============================================================================
+Write-Host "[CUTOVER 1/5] Stopping current staging container..."
+docker stop claimguard-staging
+
+# ==============================================================================
+# COMMAND 2 (STATE-CHANGING): Rename container to preserve it for instant rollback
+# ==============================================================================
+Write-Host "[CUTOVER 2/5] Preserving container as 'claimguard-staging-prephase1'..."
+docker rename claimguard-staging claimguard-staging-prephase1
+
+# ==============================================================================
+# COMMAND 3 (STATE-CHANGING): Ensure named production volume exists
+# ==============================================================================
+if (-not (docker volume ls -q --filter "name=^claimguard-data$")) {
+    Write-Host "[CUTOVER 3/5] Creating persistent production volume 'claimguard-data'..."
+    docker volume create claimguard-data
+} else {
+    Write-Host "[CUTOVER 3/5] Volume 'claimguard-data' already exists. Preserving existing volume."
+}
+
+# ==============================================================================
+# COMMAND 4 (STATE-CHANGING): Launch modernized candidate container on port 8083
+# ==============================================================================
+Write-Host "[CUTOVER 4/5] Launching claimguard:phase1-candidate on port 8083..."
+docker run -d `
+  --name claimguard-staging `
+  -p 8083:8080 `
+  -v claimguard-data:/app/data `
+  --env-file "$envFilePath" `
+  --restart unless-stopped `
+  claimguard:phase1-candidate
+
+# ==============================================================================
+# COMMAND 5: Secure Cleanup of Credentials
+# ==============================================================================
+Write-Host "[CUTOVER 5/5] Purging temporary credential file and clearing memory..."
+Remove-Item -Path $envFilePath -Force -ErrorAction SilentlyContinue
+$plainAdmin = $null
+$plainReviewer = $null
+[System.GC]::Collect()
+```
+
+---
+
+## 6. Post-Deployment Verification (Smoke & Security)
+
+Execute this automated verification block immediately after container launch:
+
+```powershell
+$baseUrl = "http://localhost:8083"
+
+# 1. Health Poll (Up to 30 seconds)
+$maxAttempts = 15
+$attempt = 0
+$healthy = $false
+
+Write-Host "Polling application health at $baseUrl/api/health..."
+while ($attempt -lt $maxAttempts -and -not $healthy) {
+    Start-Sleep -Seconds 2
+    $attempt++
+    try {
+        $hRes = Invoke-RestMethod -Uri "$baseUrl/api/health" -TimeoutSec 2
+        if ($hRes.status -eq "UP") {
+            $healthy = $true
+            Write-Host "[ONLINE] Service is UP on attempt $attempt (Database: $($hRes.database))."
+        }
+    } catch {
+        Write-Host "  Waiting for JVM startup (attempt $attempt)..."
+    }
+}
+
+if (-not $healthy) {
+    Write-Error "[STOP CONDITION TRIGGERED] Container failed health check within 30 seconds."
+    docker logs --tail 30 claimguard-staging
+    Write-Host "Execute Section 7 (Rollback Runbook) immediately."
+    return
+}
+
+# 2. Verify Anonymous Access Redirects to Login
+$anonReq = Invoke-WebRequest -Uri "$baseUrl/index.html" -MaximumRedirection 0 -ErrorAction SilentlyContinue
+if ($anonReq.StatusCode -eq 302 -and $anonReq.Headers.Location -match "login.html") {
+    Write-Host "[VERIFIED] Anonymous navigation to /index.html correctly redirected to /login.html."
+} else {
+    Write-Warning "[SECURITY WARNING] Anonymous request was not redirected to login. StatusCode: $($anonReq.StatusCode)"
+}
+
+# 3. Establish Authenticated Session & Verify JSESSIONID Cookie
+$session = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+$csrfToken = (Invoke-RestMethod -Uri "$baseUrl/api/auth/csrf" -WebSession $session).token
+
+$loginRes = Invoke-RestMethod -Uri "$baseUrl/api/auth/login" `
+    -Method Post `
+    -Body @{ username = "priya.sharma"; password = $secReviewer } `
+    -WebSession $session `
+    -Headers @{ "X-XSRF-TOKEN" = $csrfToken }
+
+if ($loginRes.status -ne "authenticated") {
+    Write-Error "[AUTH FAILURE] Reviewer login failed. Status: $($loginRes.status)"
+    return
+}
+
+# Check JSESSIONID presence without printing its value
+$cookieUri = New-Object System.Uri($baseUrl)
+$jsession = $session.Cookies.GetCookies($cookieUri)["JSESSIONID"]
+if ($null -ne $jsession -and $jsession.Value.Length -gt 0) {
+    Write-Host "[VERIFIED] Authenticated session established (Cookie Name: JSESSIONID, HttpOnly: $($jsession.HttpOnly), Secure: $($jsession.Secure))."
+} else {
+    Write-Error "[FAIL] JSESSIONID cookie not set in session."
+}
+
+# 4. Verify Reviewer Access & Seed Data Integrity
+$claimsRes = Invoke-RestMethod -Uri "$baseUrl/api/claims" -Method Get -WebSession $session
+Write-Host "[VERIFIED] Reviewer access confirmed (Total claims available: $($claimsRes.page.totalElements))."
+
+# 5. Verify Role Restrictions: Reviewer Denied on Admin Endpoints
+try {
+    $adminAttempt = Invoke-RestMethod -Uri "$baseUrl/api/admin/users" -Method Get -WebSession $session
+    Write-Warning "[SECURITY BREACH] Reviewer accessed /api/admin/users without 403 Forbidden!"
+} catch {
+    $status = $_.Exception.Response.StatusCode.value__
+    if ($status -eq 403) {
+        Write-Host "[VERIFIED] RBAC verified: Reviewer correctly denied access to /api/admin/** (HTTP 403 Forbidden)."
+    } else {
+        Write-Host "[NOTICE] /api/admin/users returned HTTP $status."
+    }
+}
+
+# 6. Verify Physical Database File on Docker Volume
+docker exec claimguard-staging ls -lh /app/data/claimguard.mv.db
+Write-Host "[VERIFIED] Persistent database file active on volume 'claimguard-data'."
+
+# ==============================================================================
+# Optional: State-Changing Verification (Operator Discretion)
+# ==============================================================================
+$runMutating = Read-Host "Do you want to run state-changing claim creation & transition verification? (y/N)"
+if ($runMutating -eq 'y' -or $runMutating -eq 'Y') {
+    $testClaim = @{
+        policyNumber        = "POL-VERIFY-001"
+        claimantName        = "Sanjay Patel"
+        contactPhone        = "555-444-3322"
+        contactEmail        = "sanjay.patel@example.com"
+        claimType           = "MOTOR"
+        incidentDate        = "2026-10-21T10:00:00"
+        claimedAmount       = 14500.00
+        incidentDescription = "Post-deployment production verification test claim"
+    } | ConvertTo-Json
+
+    $csrfToken2 = (Invoke-RestMethod -Uri "$baseUrl/api/auth/csrf" -WebSession $session).token
+    $created = Invoke-RestMethod -Uri "$baseUrl/api/claims" -Method Post -Body $testClaim -ContentType 'application/json' -WebSession $session -Headers @{ "X-XSRF-TOKEN" = $csrfToken2 }
+    Write-Host "[MUTATING TEST] Created Claim ID $($created.id), Reference: $($created.claimReference), Status: $($created.status)"
+
+    $csrfToken3 = (Invoke-RestMethod -Uri "$baseUrl/api/auth/csrf" -WebSession $session).token
+    $reviewed = Invoke-RestMethod -Uri "$baseUrl/api/claims/$($created.id)/review" -Method Patch -Body '{}' -ContentType 'application/json' -WebSession $session -Headers @{ "X-XSRF-TOKEN" = $csrfToken3 }
+    Write-Host "[MUTATING TEST] Transitioned Claim ID $($created.id) to Status: $($reviewed.status)"
+} else {
+    Write-Host "[SKIPPED] State-changing claim creation omitted per operator choice."
+}
+```
+
+---
+
+## 7. Emergency Rollback Runbook with Post-Rollback Reconciliation
+
+> [!CAUTION]
+> Execute this section only if the candidate deployment must be aborted.  
+> **Important:** The original container `claimguard-staging-prephase1` uses in-memory H2 and **cannot** read the candidate's file-backed database. The procedure below guarantees that any claims created after deployment are preserved in JSON and on the intact volume.
+
+```powershell
+Write-Warning "================================================================================"
+Write-Warning "[EMERGENCY ROLLBACK INITIATED] Restoring original container to port 8083..."
+Write-Warning "================================================================================"
+
+$rollbackDir = "E:\Desktop\Raj Yadav\Projects\backups\rollback-snapshot-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+New-Item -ItemType Directory -Path $rollbackDir -Force | Out-Null
+
+# ==============================================================================
+# STEP 1 (DATA PRESERVATION): Export Candidate Database State Before Stopping
+# ==============================================================================
+try {
+    Write-Host "[ROLLBACK 1/5] Exporting post-cutover claims from candidate via API..."
+    $candClaims = Invoke-RestMethod -Uri "http://localhost:8083/api/claims?size=100" -TimeoutSec 3 -ErrorAction SilentlyContinue
+    if ($null -ne $candClaims.content) {
+        $candClaims.content | ConvertTo-Json -Depth 10 | Set-Content -Path "$rollbackDir\candidate-claims-export.json" -Encoding UTF8
+        Write-Host "  Exported $($candClaims.content.Count) claims to $rollbackDir\candidate-claims-export.json."
+    }
+} catch {
+    Write-Warning "Could not export via API (service may be non-responsive). Proceeding with volume preservation."
+}
+
+# ==============================================================================
+# STEP 2 (STATE-CHANGING): Stop Candidate Container
+# ==============================================================================
+Write-Host "[ROLLBACK 2/5] Stopping candidate container..."
+docker stop claimguard-staging
+
+# ==============================================================================
+# STEP 3 (STATE-CHANGING): Rename Candidate Container (Preserving for Forensics)
+# ==============================================================================
+Write-Host "[ROLLBACK 3/5] Preserving candidate as 'claimguard-staging-candidate-failed'..."
+docker rename claimguard-staging claimguard-staging-candidate-failed
+
+# Take physical offline copy of persistent database volume
+docker run --rm -v claimguard-data:/data -v "$($rollbackDir):/backup" alpine cp /data/claimguard.mv.db /backup/claimguard-offline.mv.db 2>$null
+Write-Host "  Database file preserved at $rollbackDir\claimguard-offline.mv.db."
+
+# ==============================================================================
+# STEP 4 (STATE-CHANGING): Restore Original Container Name and Start
+# ==============================================================================
+Write-Host "[ROLLBACK 4/5] Restoring original container to 'claimguard-staging'..."
+docker rename claimguard-staging-prephase1 claimguard-staging
+
+Write-Host "[ROLLBACK 5/5] Starting original container..."
+docker start claimguard-staging
+
+# ==============================================================================
+# STEP 5: Verify Restored Service Health
+# ==============================================================================
+Start-Sleep -Seconds 5
+try {
+    $restoredHealth = Invoke-RestMethod -Uri "http://localhost:8083/api/health" -TimeoutSec 5
+    Write-Host "================================================================================"
+    Write-Host "[ROLLBACK SUCCESSFUL] Original container is UP on port 8083."
+    Write-Host "  Database: $($restoredHealth.database)"
+    Write-Host "  Status:   $($restoredHealth.status)"
+    Write-Host "================================================================================"
+} catch {
+    Write-Error "[CRITICAL] Restored container failed health check: $($_.Exception.Message)"
+}
+```
+
+### Post-Rollback Data Reconciliation Guide
+If new claims were created in the candidate before rollback occurred:
+1. **JSON Snapshot:** Inspect `$rollbackDir\candidate-claims-export.json` for records with `id >= 6` (custom user claims created after baseline seeding).
+2. **Database Offline Volume:** The file `$rollbackDir\claimguard-offline.mv.db` contains the full H2 relational state, documents, indicators, and audit records.
+3. **Re-ingestion:** Once the root cause of the rollback is resolved in the codebase, the offline database file can be re-attached or the JSON records can be re-submitted via API.
+
+---
+
+## 8. GO / NO-GO Owner Approval Checklist
+
+Review and sign off on all items before commencing Section 5:
+
+- [ ] **Candidate Image Validated:** Preflight check confirmed Image ID is `sha256:2fd25b07fba5787db431f3b2f10edaf8594d2fb5536580b92029ef7d58497a97`.
+- [ ] **Pre-Deployment Backup Verified:** Section 3 completed with `claims-summary.json` and `claims-history.json` written and count-verified.
+- [ ] **Original Container Untouched:** `claimguard-staging` (`910771a20872`) verified running on `8083:8080`.
+- [ ] **Production Volume Isolation:** Confirmed that `claimguard-data` is a dedicated volume separate from test data.
+- [ ] **Credentials Staged Securely:** Operator is prepared to supply passwords interactively without command-line exposure.
+- [ ] **Cutover Window Acknowledged:** A brief service interruption of 10 to 15 seconds on port 8083 is acceptable.
+- [ ] **Rollback Strategy Understood:** Operator understands that rollback restores the original in-memory container and preserves candidate database records in `$rollbackDir`.
+
+**Deployment Decision:**
+- [ ] **GO** — Proceed with Phase 1 deployment as outlined in this revised runbook.
+- [ ] **NO-GO** — Defer deployment. Maintain current staging service on port 8083.

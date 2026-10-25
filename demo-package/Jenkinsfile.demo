@@ -1,0 +1,153 @@
+// ==============================================================================
+// Jenkinsfile.demo — Safe Standalone Demonstration Pipeline
+// ==============================================================================
+// IMPORTANT NOTICE:
+// This is an educational demonstration pipeline designed for standalone student evaluation.
+// It executes automated build, test, packaging, and local Docker image tagging stages.
+// The live deployment stage ('Deploy Staging Container') from the root Jenkinsfile
+// has been intentionally excluded to prevent accidental modification of staging containers.
+// ==============================================================================
+
+pipeline {
+    agent any
+
+    environment {
+        CONTAINER_PORT = '8080'
+        DEMO_TAG = 'claimguard:demo-build'
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+        disableConcurrentBuilds()
+        timeout(time: 15, unit: 'MINUTES')
+    }
+
+    stages {
+        stage('Initialize') {
+            steps {
+                script {
+                    currentBuild.displayName = "#${env.BUILD_NUMBER} - College Demo"
+                    currentBuild.description = "Educational Build & Test Pipeline for ClaimGuard Dashboard"
+                }
+                echo "============================================================"
+                echo "Starting Safe Demo Build #${env.BUILD_NUMBER}"
+                echo "Job Name: ${env.JOB_NAME}"
+                echo "Workspace: ${env.WORKSPACE}"
+                echo "============================================================"
+            }
+        }
+
+        stage('Verify Environment') {
+            steps {
+                bat '''
+                    @echo off
+                    echo ============================================================
+                    echo [STAGE: Verify Environment]
+                    echo ============================================================
+                    echo Checking Java runtime version:
+                    java -version
+                    if errorlevel 1 (
+                        echo [ERROR] java -version check failed.
+                        exit /b 1
+                    )
+                    echo Checking Maven availability:
+                    call mvnw.cmd -v
+                    if errorlevel 1 (
+                        echo [ERROR] Maven wrapper check failed.
+                        exit /b 1
+                    )
+                    echo Checking Docker engine availability:
+                    docker --version
+                    if errorlevel 1 (
+                        echo [ERROR] Docker CLI not found or unreachable.
+                        exit /b 1
+                    )
+                    echo [SUCCESS] Environment verified for demo execution.
+                '''
+            }
+        }
+
+        stage('Run Unit & Integration Tests') {
+            steps {
+                bat '''
+                    @echo off
+                    echo ============================================================
+                    echo [STAGE: Run Unit & Integration Tests]
+                    echo ============================================================
+                    call mvnw.cmd clean test -Dtest="!*Selenium*"
+                    if errorlevel 1 (
+                        echo [ERROR] Unit and integration test suite failed.
+                        exit /b 1
+                    )
+                    echo [SUCCESS] Automated test suite executed cleanly.
+                '''
+            }
+            post {
+                always {
+                    junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
+                }
+            }
+        }
+
+        stage('Package Application') {
+            steps {
+                bat '''
+                    @echo off
+                    echo ============================================================
+                    echo [STAGE: Package Application]
+                    echo ============================================================
+                    call mvnw.cmd package -DskipTests
+                    if errorlevel 1 (
+                        echo [ERROR] Application packaging failed.
+                        exit /b 1
+                    )
+                    if not exist "target\\claimguard-dashboard-1.0.0-SNAPSHOT.jar" (
+                        echo [ERROR] Target artifact target\\claimguard-dashboard-1.0.0-SNAPSHOT.jar not found!
+                        exit /b 1
+                    )
+                    echo [SUCCESS] Packaged executable Spring Boot JAR verified.
+                '''
+                archiveArtifacts artifacts: 'target/claimguard-dashboard-1.0.0-SNAPSHOT.jar', fingerprint: true, onlyIfSuccessful: true
+            }
+        }
+
+        stage('Build Demo Docker Image') {
+            steps {
+                bat '''
+                    @echo off
+                    echo ============================================================
+                    echo [STAGE: Build Demo Docker Image]
+                    echo ============================================================
+                    echo Building local demonstration Docker image...
+                    docker build -t claimguard:demo-build -t claimguard:demo-b%BUILD_NUMBER% .
+                    if errorlevel 1 (
+                        echo [ERROR] Docker build failed.
+                        exit /b 1
+                    )
+                    echo [SUCCESS] Local demo image tagged: claimguard:demo-b%BUILD_NUMBER%
+                '''
+            }
+        }
+
+        stage('Demo Safety Verification') {
+            steps {
+                echo "============================================================"
+                echo "[SAFE DEMO NOTICE]"
+                echo "Build and testing completed successfully."
+                echo "Live staging deployment stage (port 8083) has been safely bypassed."
+                echo "To run the application standalone on the target laptop:"
+                echo "  powershell -ExecutionPolicy Bypass -File demo-package\\scripts\\start-demo.ps1"
+                echo "============================================================"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '[DEMO PIPELINE SUCCESS] All build and test stages completed cleanly.'
+        }
+        failure {
+            echo '[DEMO PIPELINE FAILURE] An error occurred during the demo pipeline execution.'
+        }
+    }
+}

@@ -1,0 +1,138 @@
+---
+# ==============================================================================
+# Ansible Playbook: Deploy and Configure ClaimGuard Dashboard Container
+# Task 13: Configuration Management
+# Idempotent provisioning of ClaimGuard container on dedicated host port 8084
+# ==============================================================================
+
+- name: Provision and Configure ClaimGuard Dashboard via Ansible
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - "../group_vars/all.yml"
+
+  tasks:
+    - name: "[PRE-FLIGHT] Verify Docker CLI accessibility"
+      ansible.builtin.stat:
+        path: "{{ claimguard_docker_bin }}"
+      register: docker_bin_stat
+      failed_when: not docker_bin_stat.stat.exists
+
+    - name: "[PRE-FLIGHT] Enforce port protection guardrails"
+      ansible.builtin.assert:
+        that:
+          - (claimguard_host_port | int) not in protected_ports
+        fail_msg: >
+          Host port {{ claimguard_host_port }} is in the protected ports list {{ protected_ports }}.
+          Cannot deploy over dev (8080), Jenkins (8081), Task 11 (8082), or Staging (8083).
+        success_msg: "Host port {{ claimguard_host_port }} complies with all port isolation rules."
+
+    - name: "[PRE-FLIGHT] Verify target Docker image exists"
+      ansible.builtin.command:
+        cmd: "{{ claimguard_docker_bin }} images -q {{ claimguard_image }}"
+      register: image_check
+      changed_when: false
+      check_mode: no
+      failed_when: image_check.stdout | trim == ""
+
+    - name: "[PRE-FLIGHT] Retrieve target image ID"
+      ansible.builtin.command:
+        cmd: "{{ claimguard_docker_bin }} inspect --format '{% raw %}{{.Id}}{% endraw %}' {{ claimguard_image }}"
+      register: target_image_id
+      changed_when: false
+      check_mode: no
+
+    - name: "[INSPECT] Check if container '{{ claimguard_container_name }}' currently exists"
+      ansible.builtin.command:
+        cmd: "{{ claimguard_docker_bin }} ps -a --filter name=^/{{ claimguard_container_name }}$ --format '{% raw %}{{.ID}}{% endraw %}'"
+      register: existing_container
+      changed_when: false
+      check_mode: no
+
+    - name: "[INSPECT] Inspect existing container properties if present"
+      ansible.builtin.command:
+        cmd: "{{ claimguard_docker_bin }} inspect --format '{% raw %}{{.State.Running}} {{.Image}} {{range $p, $conf := .NetworkSettings.Ports}}{{range $conf}}{{.HostPort}}{{end}}{{end}}{% endraw %}' {{ claimguard_container_name }}"
+      register: container_inspect
+      changed_when: false
+      check_mode: no
+      failed_when: false
+      when: existing_container.stdout | trim != ""
+
+    - name: "[IDEMPOTENCY] Determine if container recreation is required"
+      ansible.builtin.set_fact:
+        needs_deployment: >-
+          {{
+            (existing_container.stdout | trim == "") or
+            (container_inspect.stdout is not defined) or
+            (not container_inspect.stdout.startswith('true')) or
+            (target_image_id.stdout | trim not in container_inspect.stdout) or
+            ((claimguard_host_port | string) not in container_inspect.stdout)
+          }}
+
+    - name: "[STATUS] Report container state before provisioning"
+      ansible.builtin.debug:
+        msg: >
+          Container '{{ claimguard_container_name }}' exists: {{ existing_container.stdout | trim != '' }}.
+          Recreation needed: {{ needs_deployment }}.
+
+    - name: "[PRE-FLIGHT] Check port {{ claimguard_host_port }} availability if deploying"
+      ansible.builtin.command:
+        cmd: "{{ claimguard_docker_bin }} ps --filter publish={{ claimguard_host_port }} --format '{% raw %}{{.Names}}{% endraw %}'"
+      register: port_occupant
+      changed_when: false
+      check_mode: no
+      when: needs_deployment
+      failed_when: >
+        port_occupant.stdout | trim != "" and
+        port_occupant.stdout | trim != claimguard_container_name
+
+    - name: "[DEPLOY] Remove existing container if recreation is needed"
+      ansible.builtin.command:
+        cmd: "{{ claimguard_docker_bin }} rm -f {{ claimguard_container_name }}"
+      when: needs_deployment and (existing_container.stdout | trim != "")
+      changed_when: true
+
+    - name: "[DEPLOY] Start '{{ claimguard_container_name }}' container on port {{ claimguard_host_port }}"
+      ansible.builtin.command:
+        cmd: "{{ claimguard_docker_bin }} run -d --name {{ claimguard_container_name }} -p {{ claimguard_host_port }}:{{ claimguard_container_port }} {{ claimguard_image }}"
+      when: needs_deployment
+      changed_when: true
+      register: run_result
+
+    - name: "[IDEMPOTENT] Confirm existing container is already up to date"
+      ansible.builtin.debug:
+        msg: "Container '{{ claimguard_container_name }}' is already running image '{{ claimguard_image }}' on port {{ claimguard_host_port }}. No action taken."
+      when: not needs_deployment
+
+    - name: "[VERIFY] Poll health endpoint until 'UP'"
+      ansible.builtin.uri:
+        url: "{{ claimguard_health_url }}"
+        method: GET
+        status_code: 200
+        return_content: true
+      register: health_resp
+      until: >
+        health_resp.status == 200 and
+        ('"status":"UP"' in health_resp.content or
+         (health_resp.json is defined and health_resp.json.status == 'UP'))
+      retries: 25
+      delay: 2
+
+    - name: "[VERIFY] Verify root dashboard endpoint responds 200 OK"
+      ansible.builtin.uri:
+        url: "{{ claimguard_root_url }}"
+        method: GET
+        status_code: 200
+      register: root_resp
+
+    - name: "[SUMMARY] Telemetry of Ansible-managed ClaimGuard deployment"
+      ansible.builtin.debug:
+        msg:
+          container_name: "{{ claimguard_container_name }}"
+          host_port: "{{ claimguard_host_port }}"
+          image_tag: "{{ claimguard_image }}"
+          health_status: "{{ health_resp.status }}"
+          health_payload: "{{ health_resp.content }}"
+          root_dashboard_status: "{{ root_resp.status }}"
+          idempotent_pass: "{{ not needs_deployment }}"

@@ -32,6 +32,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
+    @ExceptionHandler(ReconciliationConflictException.class)
+    public ResponseEntity<ErrorResponseDTO> handleReconciliationConflict(ReconciliationConflictException ex) {
+        ErrorResponseDTO error = new ErrorResponseDTO("Reconciliation Conflict", HttpStatus.CONFLICT.value(), ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponseDTO> handleIllegalState(IllegalStateException ex) {
+        ErrorResponseDTO error = new ErrorResponseDTO("State Conflict", HttpStatus.CONFLICT.value(), ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDTO> handleIllegalArgument(IllegalArgumentException ex) {
         ErrorResponseDTO error = new ErrorResponseDTO("Bad Request", HttpStatus.BAD_REQUEST.value(), ex.getMessage());

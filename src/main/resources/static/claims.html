@@ -3,21 +3,35 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>ClaimGuard — All Claims Directory</title>
+    <meta content="web_dashboard" name="shell-type"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <title>ClaimGuard — All Claims Directory</title>
+
+    <!-- Design System Typography & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+    <link href="/css/claimguard-theme.css?v=2.4.1" rel="stylesheet"/>
+
     <style>
-        @layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}
-        ::-webkit-scrollbar{display:none;}
+        @layer base {
+            html, body { margin: 0; padding: 0; }
+            body { overscroll-behavior: none; }
+            main > :first-child { margin-top: 0 !important; }
+            main > :last-child { margin-bottom: 0 !important; }
+        }
+        ::-webkit-scrollbar { display: none; }
     </style>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
-                    "colors": {
+                    colors: {
                         "surface-container-high": "#e6e8ea",
                         "inverse-primary": "#b7c4ff",
                         "on-primary": "#ffffff",
@@ -66,11 +80,28 @@
                         "on-tertiary-fixed-variant": "#38485d",
                         "error": "#ba1a1a"
                     },
-                    "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
-                    "fontFamily": {
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    spacing: {
+                        "margin": "1.5rem", "space-xl": "1.5rem", "gutter": "1rem", "space-2xl": "2rem",
+                        "margin-lg": "2rem", "space-sm": "0.5rem", "space-lg": "1rem", "space-xs": "0.25rem",
+                        "gutter-lg": "1.5rem", "space-md": "0.75rem"
+                    },
+                    fontFamily: {
                         "body-md": ["Inter"], "tabular-data": ["Inter"], "label-md": ["Inter"], "headline-xl": ["Inter"],
                         "body-sm": ["Inter"], "body-lg": ["Inter"], "code-audit": ["Inter"], "label-sm": ["Inter"],
                         "headline-lg": ["Inter"], "headline-md": ["Inter"]
+                    },
+                    fontSize: {
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "tabular-data": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "label-md": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-xl": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-lg": ["15px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+                        "code-audit": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+                        "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+                        "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
                     }
                 }
             }
@@ -88,12 +119,13 @@
                     <span class="font-label-sm text-label-sm text-secondary-fixed-dim uppercase tracking-wider mt-1">Enterprise Fraud Ops</span>
                 </div>
             </div>
+
             <nav class="flex flex-col gap-1 px-space-md py-space-lg">
                 <a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" href="/index.html">
                     <span class="material-symbols-outlined text-[20px]">dashboard</span>
                     <span class="font-label-md text-label-md">Dashboard</span>
                 </a>
-                <a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg transition-colors bg-primary-container text-on-primary font-bold" href="/claims.html">
+                <a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg transition-colors bg-primary-container text-on-primary font-bold shadow-sm" href="/claims.html">
                     <span class="material-symbols-outlined text-[20px]">folder_open</span>
                     <span class="font-label-md text-label-md">All Claims</span>
                 </a>
@@ -106,113 +138,209 @@
                         <span class="material-symbols-outlined text-[20px]">schedule</span>
                         <span class="font-label-md text-label-md">Pending Reviews</span>
                     </div>
-                    <span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">1</span>
+                    <span id="pending-badge" class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold transition-all">—</span>
+                </a>
+                <a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-secondary-fixed-dim hover:bg-tertiary-container hover:text-surface-container-lowest transition-colors" href="/claims.html?status=APPROVED">
+                    <span class="material-symbols-outlined text-[20px]">history</span>
+                    <span class="font-label-md text-label-md">Review History</span>
                 </a>
             </nav>
         </div>
+
         <div class="p-space-md m-space-sm rounded-xl bg-on-tertiary-fixed flex items-center justify-between">
             <div class="flex items-center gap-space-sm">
-                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">PS</div>
+                <div class="relative">
+                    <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-xs">PS</div>
+                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-surface-tint"></span>
+                </div>
                 <div class="flex flex-col">
                     <span class="font-label-md text-label-md text-surface-container-lowest leading-tight">Priya Sharma</span>
                     <span class="font-label-sm text-label-sm text-secondary-fixed-dim">Senior Claims Analyst</span>
                 </div>
             </div>
-            <a href="/index.html" class="text-secondary-fixed-dim hover:text-surface-container-lowest p-1 rounded transition-colors" title="Home">
-                <span class="material-symbols-outlined text-[20px]">home</span>
-            </a>
+            <button class="text-secondary-fixed-dim hover:text-surface-container-lowest p-1 rounded transition-colors" title="Operator Session" type="button">
+                <span class="material-symbols-outlined text-[20px]">badge</span>
+            </button>
         </div>
     </aside>
 
-    <!-- Top Bar -->
+    <!-- Content Offset -->
     <div class="pl-64">
+        <!-- Top Fixed Header -->
         <header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl">
             <div class="flex items-center gap-space-xl flex-1 max-w-2xl">
                 <div class="relative w-full max-w-md">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
-                    <input id="claims-search-input" class="w-full h-9 pl-9 pr-4 rounded-lg bg-surface-container-low text-on-surface placeholder:text-outline font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Search by claim reference, claimant, policy, vehicle..." type="text"/>
+                    <input id="header-search-input" class="w-full h-9 pl-9 pr-4 rounded-lg bg-surface-container-low text-on-surface placeholder:text-outline font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Search claims by ID (CLM-...), claimant, or policy... (Enter)" type="text"/>
                 </div>
             </div>
             <div class="flex items-center gap-space-lg">
-                <a class="inline-flex items-center gap-space-xs h-9 px-space-md rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md transition-colors" href="/submit.html">
+                <div class="hidden xl:flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container text-on-surface-variant font-code-audit text-code-audit">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    <span>DevOps Build v2.4.1 • Jenkins #142</span>
+                </div>
+                <button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" title="Notifications" type="button">
+                    <span class="material-symbols-outlined text-[22px]">notifications</span>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span>
+                </button>
+                <a class="inline-flex items-center gap-space-xs h-9 px-space-md rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md transition-colors shadow-sm" href="/submit.html">
                     <span class="material-symbols-outlined text-[18px]">add</span>
                     <span>Submit New Claim</span>
                 </a>
+                <div class="flex items-center gap-space-xs pl-space-xs">
+                    <div id="header-user-avatar" class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xs" title="Active Session">PS</div>
+                    <button id="header-logout-btn" class="p-1 rounded-lg text-outline hover:text-error hover:bg-surface-container transition-colors" title="Sign Out" type="button">
+                        <span class="material-symbols-outlined text-[18px]">logout</span>
+                    </button>
+                </div>
             </div>
         </header>
 
-        <!-- Main Claims Table View -->
+        <!-- Main Body -->
         <main class="relative pt-16 w-full min-h-screen bg-background">
             <div class="flex flex-col w-full">
                 <div class="px-space-xl py-space-lg flex flex-col gap-space-lg max-w-[1720px] mx-auto w-full">
-                    <!-- Title & Breadcrumbs -->
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
-                        <div class="flex flex-col gap-1">
-                            <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
-                                <a class="hover:text-primary transition-colors" href="/index.html">Dashboard</a>
-                                <span>/</span>
-                                <span class="text-on-surface font-semibold">Claims Directory</span>
-                            </div>
-                            <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Claims Ingestion & Audit Queue</h1>
+
+                    <!-- Top Breadcrumb & Live Ops Pulse -->
+                    <div class="flex flex-wrap items-center justify-between gap-space-md">
+                        <div class="flex items-center gap-space-xs font-code-audit text-code-audit text-outline">
+                            <span>CLAIMS ENGINE</span>
+                            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                            <span>OPS_REGISTRY</span>
+                            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                            <span class="text-on-surface font-semibold">ALL_CLAIMS_V2</span>
+                            <span class="ml-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+                                <span>Index Synchronized: Just now</span>
+                            </span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="loadClaimsTable()" class="h-9 px-3 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-low shadow-sm font-label-md flex items-center gap-1 transition-all">
-                                <span class="material-symbols-outlined text-[18px]">refresh</span>
-                                <span>Refresh</span>
+                        <div class="flex items-center gap-space-md">
+                            <button id="refresh-claims-btn" class="h-8 px-3 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-md text-label-md transition-colors flex items-center gap-1.5 shadow-sm border border-surface-container" type="button">
+                                <span class="material-symbols-outlined text-[16px]">refresh</span>
+                                <span>Sync Registry</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Filter Strip -->
-                    <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-sm">
-                        <div class="flex flex-wrap items-center justify-between gap-space-sm">
-                            <!-- Status Filters -->
-                            <div class="flex flex-wrap items-center gap-1.5" id="status-filters">
-                                <button onclick="setStatusFilter('')" class="status-btn px-3 py-1 rounded-full text-xs font-semibold bg-primary-container text-on-primary transition-colors" data-status="">All</button>
-                                <button onclick="setStatusFilter('SUBMITTED')" class="status-btn px-3 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" data-status="SUBMITTED">Submitted</button>
-                                <button onclick="setStatusFilter('UNDER_REVIEW')" class="status-btn px-3 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" data-status="UNDER_REVIEW">Under Review</button>
-                                <button onclick="setStatusFilter('MORE_INFO_REQUIRED')" class="status-btn px-3 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" data-status="MORE_INFO_REQUIRED">Info Required</button>
-                                <button onclick="setStatusFilter('APPROVED')" class="status-btn px-3 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" data-status="APPROVED">Approved</button>
-                                <button onclick="setStatusFilter('REJECTED')" class="status-btn px-3 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" data-status="REJECTED">Rejected</button>
+                    <!-- Header Banner Card with Exposure Callout -->
+                    <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-space-lg bg-surface-container-lowest p-space-xl rounded-xl shadow-sm relative overflow-hidden border border-surface-container/60">
+                        <div class="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-primary-container/5 pointer-events-none"></div>
+                        <div class="flex flex-col gap-space-xs max-w-3xl z-10">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-code-audit text-code-audit uppercase tracking-wider font-semibold">Repository Node</span>
+                                <span class="text-outline text-[13px] font-body-sm">• Partition 04 / Central Claims Registry</span>
+                            </div>
+                            <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">All Claims Repository</h1>
+                            <p class="font-body-md text-body-md text-secondary">
+                                Comprehensive searchable registry of all submitted, in-review, and archived insurance claims across all commercial & retail product lines.
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-space-lg z-10 flex-wrap">
+                            <div class="flex items-center gap-space-md bg-surface-container-low px-space-md py-space-sm rounded-lg border border-surface-container">
+                                <div class="w-9 h-9 rounded-lg bg-secondary-container flex items-center justify-center text-on-secondary-container">
+                                    <span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="font-label-sm text-label-sm text-outline">PORTFOLIO EXPOSURE</span>
+                                    <span id="banner-exposure-val" class="font-tabular-data text-headline-md font-bold text-on-surface">₹0</span>
+                                </div>
+                            </div>
+                            <a class="h-10 px-4 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md transition-colors flex items-center gap-2 shadow-md" href="/submit.html">
+                                <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                                <span>Submit New Claim</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Operational State Segmented Switcher -->
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+                        <div class="flex items-center gap-1 bg-surface-container-high p-1 rounded-xl w-fit">
+                            <button data-status="" class="filter-tab-btn px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md font-bold shadow-sm flex items-center gap-2 transition-all" id="tab-all" type="button">
+                                <span>Active Claims</span>
+                                <span id="count-tab-all" class="px-1.5 py-0.2 rounded-full bg-primary-fixed text-on-primary-fixed text-[11px] font-code-audit">0</span>
+                            </button>
+                            <button data-status="UNDER_REVIEW" class="filter-tab-btn px-space-md py-1.5 rounded-lg text-secondary hover:text-on-surface font-label-md text-label-md flex items-center gap-2 transition-all" id="tab-triage" type="button">
+                                <span>Pending Triage</span>
+                                <span id="count-tab-triage" class="px-1.5 py-0.2 rounded-full bg-error-container text-on-error-container text-[11px] font-code-audit font-semibold">0</span>
+                            </button>
+                            <button data-status="APPROVED" class="filter-tab-btn px-space-md py-1.5 rounded-lg text-secondary hover:text-on-surface font-label-md text-label-md flex items-center gap-2 transition-all" id="tab-resolved" type="button">
+                                <span>Resolved & Settled</span>
+                                <span id="count-tab-resolved" class="px-1.5 py-0.2 rounded-full bg-surface-container text-secondary text-[11px] font-code-audit">0</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter & Search Command Panel -->
+                    <div class="flex flex-col gap-space-md bg-surface-container-lowest p-space-lg rounded-xl shadow-sm border border-surface-container/60">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-md items-center">
+                            <!-- Search Input -->
+                            <div class="lg:col-span-5 relative">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+                                <input id="claims-search-input" class="w-full h-10 pl-9 pr-8 rounded-lg bg-surface-container-low text-on-surface placeholder:text-outline font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary-container" placeholder="Search by Claim ID (CLM-...), claimant, or policy..." type="text"/>
+                                <button id="clear-search-btn" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface" type="button">
+                                    <span class="material-symbols-outlined text-[16px]">close</span>
+                                </button>
                             </div>
 
-                            <!-- Risk Priority Filter -->
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs text-outline font-semibold uppercase">Risk:</span>
-                                <select id="risk-select" onchange="setRiskFilter(this.value)" class="h-8 px-2 pr-6 rounded-lg bg-surface-container text-on-surface font-label-sm text-label-sm appearance-none focus:outline-none cursor-pointer">
-                                    <option value="">All Priorities</option>
-                                    <option value="HIGH">High Risk</option>
-                                    <option value="MEDIUM">Medium Risk</option>
-                                    <option value="LOW">Low Risk</option>
-                                </select>
+                            <!-- Filter 1: Status Dropdown -->
+                            <div class="lg:col-span-3">
+                                <div class="relative">
+                                    <select id="status-select" class="w-full h-10 px-3 pr-8 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container cursor-pointer font-medium">
+                                        <option value="">Status: All Statuses</option>
+                                        <option value="SUBMITTED">Submitted</option>
+                                        <option value="UNDER_REVIEW">Under Review</option>
+                                        <option value="MORE_INFO_REQUIRED">Info Required</option>
+                                        <option value="APPROVED">Approved</option>
+                                        <option value="REJECTED">Rejected</option>
+                                    </select>
+                                    <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">expand_more</span>
+                                </div>
+                            </div>
+
+                            <!-- Filter 2: Risk Dropdown -->
+                            <div class="lg:col-span-3">
+                                <div class="relative">
+                                    <select id="risk-select" onchange="setRiskFilter(this.value)" class="w-full h-10 px-3 pr-8 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container cursor-pointer font-medium">
+                                        <option value="">Risk Level: All Levels</option>
+                                        <option value="HIGH">High Risk (Heuristics)</option>
+                                        <option value="MEDIUM">Medium Risk</option>
+                                        <option value="LOW">Low Risk</option>
+                                    </select>
+                                    <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">expand_more</span>
+                                </div>
+                            </div>
+
+                            <!-- Reset Filters -->
+                            <div class="lg:col-span-1 flex justify-end">
+                                <button id="reset-filters-btn" class="h-10 px-3 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md transition-colors flex items-center justify-center gap-1 w-full" title="Reset Filters" type="button">
+                                    <span class="material-symbols-outlined text-[16px]">restart_alt</span>
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Main Claims Table -->
-                    <div class="flex flex-col bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden" id="view-claims-table">
-                        <div class="w-full overflow-x-auto">
-                            <table class="w-full text-left font-body-sm text-body-sm border-collapse">
+                    <!-- Claims Inventory Table Card -->
+                    <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col border border-surface-container/60">
+                        <div class="overflow-x-auto w-full">
+                            <table class="w-full text-left border-collapse">
                                 <thead>
-                                    <tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm tracking-wider uppercase">
-                                        <th class="py-3 px-space-md">Claim Reference</th>
-                                        <th class="py-3 px-space-md">Claimant</th>
-                                        <th class="py-3 px-space-md">Policy No.</th>
-                                        <th class="py-3 px-space-md">Type</th>
-                                        <th class="py-3 px-space-md text-right">Claim Amount</th>
-                                        <th class="py-3 px-space-md">Submission Date</th>
-                                        <th class="py-3 px-space-md">Status</th>
-                                        <th class="py-3 px-space-md">Heuristic Risk</th>
-                                        <th class="py-3 px-space-md">Assigned Reviewer</th>
-                                        <th class="py-3 px-space-md text-center">Action</th>
+                                    <tr class="bg-surface-container-low text-outline font-label-sm text-label-sm uppercase tracking-wider">
+                                        <th class="py-3 px-space-lg">Claim Reference</th>
+                                        <th class="py-3 px-space-lg">Policyholder & Entity</th>
+                                        <th class="py-3 px-space-lg">Category</th>
+                                        <th class="py-3 px-space-lg">Amount Claimed</th>
+                                        <th class="py-3 px-space-lg">Incident Date</th>
+                                        <th class="py-3 px-space-lg">Operational Status</th>
+                                        <th class="py-3 px-space-lg">Fraud Risk Rating</th>
+                                        <th class="py-3 px-space-lg">Assigned Analyst</th>
+                                        <th class="py-3 px-space-lg text-right">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="claims-tbody" class="divide-y divide-surface-container-high text-on-surface">
-                                    <!-- Dynamic rows loaded via API -->
+                                <tbody id="claims-tbody" class="divide-y divide-surface-container-low font-body-sm text-body-sm text-on-surface">
                                     <tr>
-                                        <td colspan="10" class="py-12 text-center text-outline">
+                                        <td class="py-8 px-space-lg text-center text-outline" colspan="9">
                                             <div class="flex items-center justify-center gap-2">
-                                                <span class="material-symbols-outlined animate-spin text-[24px]">progress_activity</span>
+                                                <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
                                                 <span>Loading claims inventory...</span>
                                             </div>
                                         </td>
@@ -221,191 +349,277 @@
                             </table>
                         </div>
 
-                        <!-- Table Footer -->
-                        <div class="p-space-md flex items-center justify-between border-t border-surface-container-low bg-surface-container-lowest flex-wrap gap-2">
-                            <div class="font-body-sm text-body-sm text-secondary">
-                                Displaying <span id="claims-count-display" class="font-semibold text-on-surface">0</span> claims
+                        <!-- Pagination and Count Footer -->
+                        <div class="p-space-lg border-t border-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-md font-body-sm text-body-sm text-secondary">
+                            <div>
+                                Showing <span id="claims-count-display" class="font-bold text-on-surface">0</span> total registered claim records in repository
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button class="px-3 py-1 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors text-xs font-medium" type="button" disabled>Previous</button>
+                                <span class="px-2.5 py-1 rounded-lg bg-primary-container text-on-primary font-bold text-xs">1</span>
+                                <button class="px-3 py-1 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors text-xs font-medium" type="button" disabled>Next</button>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- API Client & Page Logic -->
-    <script src="/js/api.js"></script>
+    <!-- Live REST API Integration Script -->
+    <script src="/js/api.js?v=2.4.1"></script>
     <script>
-        let currentStatus = '';
-        let currentRisk = '';
-        let currentSearch = '';
+        let allClaims = [];
+        let currentStatusFilter = '';
+        let currentRiskFilter = '';
+        let currentSearchQuery = '';
 
-        async function loadClaimsTable() {
-            const tbody = document.getElementById('claims-tbody');
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="10" class="py-12 text-center text-outline">
-                        <div class="flex items-center justify-center gap-2">
-                            <span class="material-symbols-outlined animate-spin text-[24px]">progress_activity</span>
-                            <span>Loading claims inventory...</span>
-                        </div>
-                    </td>
-                </tr>
-            `;
-
-            try {
-                const data = await ClaimGuardAPI.getClaims({
-                    status: currentStatus,
-                    risk: currentRisk,
-                    search: currentSearch,
-                    size: 50
-                });
-
-                const claims = data.content || [];
-                document.getElementById('claims-count-display').innerText = claims.length;
-
-                if (claims.length === 0) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="10" class="py-12 text-center text-outline">
-                                <div class="flex flex-col items-center justify-center gap-2">
-                                    <span class="material-symbols-outlined text-4xl text-outline">search_off</span>
-                                    <p class="font-semibold text-on-surface">No matching claims found</p>
-                                    <p class="text-xs">Try adjusting your filters or search terms.</p>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
-
-                tbody.innerHTML = claims.map(claim => {
-                    const statusBadge = getStatusBadge(claim.status);
-                    const riskBadge = getRiskBadge(claim.riskPriority, claim.indicatorCount);
-                    const amountFormatted = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(claim.claimedAmount);
-                    const dateFormatted = new Date(claim.submissionDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-
-                    return `
-                        <tr class="hover:bg-surface-container-low/60 transition-colors group">
-                            <td class="py-3 px-space-md align-middle font-tabular-data font-bold text-primary">
-                                <a href="/review.html?id=${claim.id}" class="hover:underline">${escapeHtml(claim.claimReference)}</a>
-                            </td>
-                            <td class="py-3 px-space-md align-middle">
-                                <div class="flex flex-col">
-                                    <span class="font-semibold text-on-surface">${escapeHtml(claim.claimantName)}</span>
-                                    <span class="font-code-audit text-code-audit text-outline">${escapeHtml(claim.vehicleRegNumber || claim.policyNumber)}</span>
-                                </div>
-                            </td>
-                            <td class="py-3 px-space-md align-middle font-code-audit text-code-audit text-secondary font-medium">
-                                ${escapeHtml(claim.policyNumber)}
-                            </td>
-                            <td class="py-3 px-space-md align-middle">
-                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 text-blue-700">
-                                    ${claim.claimType}
-                                </span>
-                            </td>
-                            <td class="py-3 px-space-md align-middle text-right font-tabular-data font-bold text-on-surface">
-                                ${amountFormatted}
-                            </td>
-                            <td class="py-3 px-space-md align-middle font-code-audit text-code-audit text-secondary">
-                                ${dateFormatted}
-                            </td>
-                            <td class="py-3 px-space-md align-middle">
-                                ${statusBadge}
-                            </td>
-                            <td class="py-3 px-space-md align-middle">
-                                ${riskBadge}
-                            </td>
-                            <td class="py-3 px-space-md align-middle text-secondary font-medium">
-                                ${escapeHtml(claim.assignedReviewer || 'Unassigned')}
-                            </td>
-                            <td class="py-3 px-space-md align-middle text-center">
-                                <a href="/review.html?id=${claim.id}" class="inline-block px-3 py-1 rounded bg-primary-container text-on-primary hover:bg-primary font-label-sm text-label-sm font-semibold transition-colors">
-                                    Open Dossier
-                                </a>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-
-            } catch (err) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="10" class="py-12 text-center text-error">
-                            <span class="material-symbols-outlined text-3xl">error</span>
-                            <p class="mt-2 font-semibold">Error connecting to ClaimGuard API: ${escapeHtml(err.message)}</p>
-                        </td>
-                    </tr>
-                `;
-            }
-        }
-
-        function setStatusFilter(status) {
-            currentStatus = status;
-            document.querySelectorAll('#status-filters .status-btn').forEach(btn => {
-                if (btn.getAttribute('data-status') === status) {
-                    btn.className = "status-btn px-3 py-1 rounded-full text-xs font-semibold bg-primary-container text-on-primary transition-colors";
-                } else {
-                    btn.className = "status-btn px-3 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors";
-                }
-            });
-            loadClaimsTable();
-        }
-
-        function setRiskFilter(risk) {
-            currentRisk = risk;
-            loadClaimsTable();
+        function formatINR(val) {
+            return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
         }
 
         function getStatusBadge(status) {
-            switch(status) {
-                case 'UNDER_REVIEW':
-                    return '<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-secondary-container text-on-secondary-fixed">Under Review</span>';
+            switch (status) {
                 case 'APPROVED':
-                    return '<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-tertiary-fixed text-on-tertiary-fixed">Approved</span>';
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-tertiary-fixed text-on-tertiary-fixed">Approved</span>';
                 case 'REJECTED':
-                    return '<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-error-container text-on-error-container">Rejected</span>';
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-error-container text-on-error-container">Rejected</span>';
+                case 'UNDER_REVIEW':
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-secondary-container text-on-secondary-fixed">Under Review</span>';
                 case 'MORE_INFO_REQUIRED':
-                    return '<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-secondary-fixed text-on-secondary-fixed">Info Required</span>';
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container-high text-on-surface-variant">Info Required</span>';
+                case 'SUBMITTED':
                 default:
-                    return '<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-primary-fixed text-on-primary-fixed-variant">Submitted</span>';
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-primary-fixed text-on-primary-fixed">Submitted</span>';
             }
         }
 
-        function getRiskBadge(priority, indicatorCount) {
-            if (priority === 'HIGH') {
-                return `<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-error font-semibold"><span class="material-symbols-outlined text-[14px]">error</span> High (${indicatorCount})</span>`;
-            } else if (priority === 'MEDIUM') {
-                return `<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-amber-600 font-semibold"><span class="material-symbols-outlined text-[14px]">warning</span> Elevated (${indicatorCount})</span>`;
+                function getRiskBadge(priority) {
+            const p = (priority || '').toUpperCase();
+            if (p === 'HIGH') {
+                return '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-error-container text-on-error-container"><span class="w-1.5 h-1.5 rounded-full bg-error"></span>High</span>';
+            } else if (p === 'MEDIUM') {
+                return '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>Medium</span>';
+            } else {
+                return '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-emerald-100 text-emerald-800"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Low</span>';
             }
-            return `<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-emerald-600 font-semibold"><span class="material-symbols-outlined text-[14px]">check_circle</span> Low Risk</span>`;
         }
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
+        function getTypeIcon(cat) {
+            switch ((cat || '').toUpperCase()) {
+                case 'MOTOR': return 'directions_car';
+                case 'HEALTH': return 'medical_services';
+                case 'PROPERTY': return 'home';
+                case 'TRAVEL': return 'flight';
+                default: return 'folder';
+            }
         }
 
+        function renderTable(claims) {
+            const tbody = document.getElementById('claims-tbody');
+            if (!claims || claims.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="py-8 px-space-lg text-center text-outline">No claim records match the selected filters.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = claims.map(c => `
+                <tr class="hover:bg-surface-container-low transition-colors">
+                    <td class="py-3 px-space-lg font-code-audit text-code-audit font-semibold text-primary">
+                        <a href="/review.html?id=${c.id}" class="hover:underline">${c.claimReference || ('CLM-' + c.id)}</a>
+                    </td>
+                    <td class="py-3 px-space-lg">
+                        <div class="font-semibold text-on-surface">${c.claimantName || c.policyholderName || '—'}</div>
+                        <div class="font-code-audit text-[11px] text-outline">${c.policyNumber || 'No Policy Link'}</div>
+                    </td>
+                    <td class="py-3 px-space-lg">
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+                            <span class="material-symbols-outlined text-[13px]">${getTypeIcon(c.claimType || c.claimCategory)}</span> ${c.claimType || c.claimCategory || 'General'}
+                        </span>
+                    </td>
+                    <td class="py-3 px-space-lg font-tabular-data text-tabular-data font-semibold text-on-surface">${formatINR(c.claimedAmount || c.claimAmount || 0)}</td>
+                    <td class="py-3 px-space-lg text-secondary">${c.incidentDate ? new Date(c.incidentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}</td>
+                    <td class="py-3 px-space-lg">${getStatusBadge(c.status)}</td>
+                    <td class="py-3 px-space-lg">${getRiskBadge(c.riskPriority || c.riskLevel)}</td>
+                    <td class="py-3 px-space-lg text-on-surface font-medium">${c.assignedReviewer || 'Unassigned'}</td>
+                    <td class="py-3 px-space-lg text-right">
+                        <a href="/review.html?id=${c.id}" class="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md transition-colors gap-1 shadow-xs" title="Open Forensic Review Dossier">
+                            <span class="material-symbols-outlined text-[16px]">visibility</span>
+                            <span>Review</span>
+                        </a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterAndRender() {
+            let filtered = [...allClaims];
+
+            // 1. Search Query
+            if (currentSearchQuery) {
+                const term = currentSearchQuery.toLowerCase();
+                filtered = filtered.filter(c =>
+                    (c.claimReference && c.claimReference.toLowerCase().includes(term)) ||
+                    (c.claimantName && c.claimantName.toLowerCase().includes(term)) ||
+                    (c.policyholderName && c.policyholderName.toLowerCase().includes(term)) ||
+                    (c.policyNumber && c.policyNumber.toLowerCase().includes(term)) ||
+                    (c.claimCategory && c.claimCategory.toLowerCase().includes(term)) ||
+                    (c.claimType && c.claimType.toLowerCase().includes(term))
+                );
+            }
+
+            // 2. Status Filter
+            if (currentStatusFilter) {
+                filtered = filtered.filter(c => c.status === currentStatusFilter);
+            }
+
+                        // 3. Risk Filter
+            if (currentRiskFilter) {
+                const targetLvl = currentRiskFilter.toUpperCase();
+                filtered = filtered.filter(c => {
+                    const lvl = (c.riskPriority || c.riskLevel || '').toUpperCase();
+                    return lvl === targetLvl;
+                });
+            }
+
+            renderTable(filtered);
+        }
+
+        async function loadClaims() {
+            try {
+                const data = await ClaimGuardAPI.getClaims({ size: 100 });
+                const claims = data.content || (data._embedded ? data._embedded.claimResponseList : []) || [];
+                allClaims = claims;
+
+                // Backend total count display
+                const totalCount = data.page?.totalElements ?? data.totalElements ?? claims.length;
+                document.getElementById('claims-count-display').textContent = totalCount;
+
+                // Exposure sum
+                const exposure = claims.reduce((sum, c) => sum + (c.claimedAmount || c.claimAmount || 0), 0);
+                document.getElementById('banner-exposure-val').textContent = formatINR(exposure);
+
+                // Counts for segmented tabs
+                let underReviewCount = 0;
+                let approvedCount = 0;
+                claims.forEach(c => {
+                    if (c.status === 'UNDER_REVIEW') underReviewCount++;
+                    if (c.status === 'APPROVED') approvedCount++;
+                });
+
+                document.getElementById('count-tab-all').textContent = claims.length;
+                document.getElementById('count-tab-triage').textContent = underReviewCount;
+                document.getElementById('count-tab-resolved').textContent = approvedCount;
+
+                filterAndRender();
+
+            } catch (err) {
+                console.error('Failed to load claims directory:', err);
+                const tbody = document.getElementById('claims-tbody');
+                tbody.innerHTML = '<tr><td colspan="9" class="py-8 px-space-lg text-center text-error">Unable to connect to ClaimGuard REST backend.</td></tr>';
+            }
+        }
+
+        // Segmented Switcher Tab Handlers
+        document.querySelectorAll('.filter-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tab-btn').forEach(b => {
+                    b.classList.remove('bg-surface-container-lowest', 'text-on-surface', 'font-bold', 'shadow-sm');
+                    b.classList.add('text-secondary');
+                });
+                btn.classList.add('bg-surface-container-lowest', 'text-on-surface', 'font-bold', 'shadow-sm');
+                btn.classList.remove('text-secondary');
+
+                currentStatusFilter = btn.getAttribute('data-status') || '';
+                document.getElementById('status-select').value = currentStatusFilter;
+                filterAndRender();
+            });
+        });
+
+        // Search Input Handlers
+        const searchInput = document.getElementById('claims-search-input');
+        searchInput.addEventListener('input', (e) => {
+            currentSearchQuery = e.target.value.trim();
+            filterAndRender();
+        });
+
+        document.getElementById('clear-search-btn').addEventListener('click', () => {
+            searchInput.value = '';
+            currentSearchQuery = '';
+            filterAndRender();
+        });
+
+        // Status Select Filter
+        document.getElementById('status-select').addEventListener('change', (e) => {
+            currentStatusFilter = e.target.value;
+            filterAndRender();
+        });
+
+                function setRiskFilter(val) {
+            currentRiskFilter = val;
+            const el = document.getElementById('risk-select');
+            if (el) el.value = val;
+            filterAndRender();
+        }
+        window.setRiskFilter = setRiskFilter;
+
+        function setStatusFilter(val) {
+            currentStatusFilter = val;
+            const el = document.getElementById('status-select');
+            if (el) el.value = val;
+            filterAndRender();
+        }
+        window.setStatusFilter = setStatusFilter;
+
+        // Risk Select Filter
+        document.getElementById('risk-select').addEventListener('change', (e) => {
+            currentRiskFilter = e.target.value;
+            filterAndRender();
+        });
+
+        // Reset Filters Button
+        document.getElementById('reset-filters-btn').addEventListener('click', () => {
+            searchInput.value = '';
+            currentSearchQuery = '';
+            currentStatusFilter = '';
+            currentRiskFilter = '';
+            document.getElementById('status-select').value = '';
+            document.getElementById('risk-select').value = '';
+
+            document.querySelectorAll('.filter-tab-btn').forEach(b => {
+                b.classList.remove('bg-surface-container-lowest', 'text-on-surface', 'font-bold', 'shadow-sm');
+                b.classList.add('text-secondary');
+            });
+            document.getElementById('tab-all').classList.add('bg-surface-container-lowest', 'text-on-surface', 'font-bold', 'shadow-sm');
+            document.getElementById('tab-all').classList.remove('text-secondary');
+
+            filterAndRender();
+        });
+
+        document.getElementById('refresh-claims-btn').addEventListener('click', () => {
+            loadClaims();
+            ClaimGuardAPI.updatePendingBadge();
+        });
+
+        // Parse URL params for pre-filtering (e.g. claims.html?status=UNDER_REVIEW or ?search=...)
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const statusParam = urlParams.get('status');
             const searchParam = urlParams.get('search');
 
             if (statusParam) {
-                setStatusFilter(statusParam);
+                currentStatusFilter = statusParam;
+                document.getElementById('status-select').value = statusParam;
+                if (statusParam === 'UNDER_REVIEW') {
+                    document.getElementById('tab-triage').click();
+                }
             }
             if (searchParam) {
-                currentSearch = searchParam;
-                document.getElementById('claims-search-input').value = searchParam;
+                currentSearchQuery = searchParam;
+                searchInput.value = searchParam;
             }
 
-            const searchInput = document.getElementById('claims-search-input');
-            searchInput.addEventListener('input', (e) => {
-                currentSearch = e.target.value.trim();
-                loadClaimsTable();
-            });
-
-            loadClaimsTable();
+            loadClaims();
         });
     </script>
 </body>

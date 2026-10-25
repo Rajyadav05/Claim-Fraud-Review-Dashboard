@@ -3,7 +3,12 @@ pipeline {
 
     environment {
         JAVA_HOME = 'C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.12.101-hotspot'
-        PATH = "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.12.101-hotspot\\bin;${env.PATH}"
+        DOCKER_BIN = 'C:\\Users\\User\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin'
+        DOCKER_HOST = 'npipe:////./pipe/docker_engine'
+        PATH = "${env.DOCKER_BIN};${env.JAVA_HOME}\\bin;${env.PATH}"
+        STAGING_PORT = '8083'
+        CONTAINER_PORT = '8080'
+        STAGING_CONTAINER = 'claimguard-staging'
     }
 
     options {
@@ -17,7 +22,7 @@ pipeline {
             steps {
                 script {
                     currentBuild.displayName = "#${env.BUILD_NUMBER} - ClaimGuard Main"
-                    currentBuild.description = "Continuous Testing Pipeline for ClaimGuard Dashboard"
+                    currentBuild.description = "Continuous Testing & Docker CD Pipeline for ClaimGuard Dashboard"
                 }
                 echo "============================================================"
                 echo "Starting Build #${env.BUILD_NUMBER}"
@@ -35,7 +40,7 @@ pipeline {
                     echo [STAGE: Verify Environment]
                     echo ============================================================
                     set "JAVA_HOME=C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.12.101-hotspot"
-                    set "PATH=%JAVA_HOME%\\bin;%PATH%"
+                    set "PATH=%DOCKER_BIN%;%JAVA_HOME%\\bin;%PATH%"
                     echo Configured JAVA_HOME: %JAVA_HOME%
                     echo Checking Java runtime version:
                     java -version
@@ -55,7 +60,23 @@ pipeline {
                     ) else (
                         echo [WARN] Chrome not found at standard path. Selenium Manager will attempt automated resolution.
                     )
-                    echo [SUCCESS] Build and test environment verified.
+                    echo Checking Docker installation and Engine:
+                    where docker
+                    if errorlevel 1 (
+                        echo [ERROR] docker CLI executable not found on PATH.
+                        exit /b 1
+                    )
+                    docker --version
+                    if errorlevel 1 (
+                        echo [ERROR] docker --version check failed.
+                        exit /b 1
+                    )
+                    docker info
+                    if errorlevel 1 (
+                        echo [ERROR] Docker engine is unreachable via %DOCKER_HOST%.
+                        exit /b 1
+                    )
+                    echo [SUCCESS] Build, test, and Docker environment verified.
                 '''
             }
         }
@@ -134,21 +155,47 @@ pipeline {
             }
         }
 
-        stage('Server Deployment Standby') {
+        stage('Build Docker Image') {
             steps {
                 bat '''
                     @echo off
                     echo ============================================================
-                    echo [STAGE: Server Deployment Standby]
+                    echo [STAGE: Build Docker Image]
                     echo ============================================================
-                    echo [INFO] Unit, integration, packaging, and E2E browser tests
-                    echo        completed successfully.
-                    echo [INFO] Automated deployment to remote server or container
-                    echo        environment is on standby pending infrastructure
-                    echo        provisioning in Tasks 11-13 (Docker, Ansible).
-                    echo [INFO] Refer to docs/task-08-pipeline-as-code-and-server-deployment.md
-                    echo        and docs/task-10-continuous-testing-in-jenkins.md.
+                    echo Packaging Docker images for build #%BUILD_NUMBER%...
+                    docker build -t claimguard:b%BUILD_NUMBER% -t claimguard:staging .
+                    if errorlevel 1 (
+                        echo [ERROR] Docker build failed.
+                        exit /b 1
+                    )
+                    echo [SUCCESS] Docker images built and tagged:
+                    echo   - claimguard:b%BUILD_NUMBER%
+                    echo   - claimguard:staging
+                    docker images claimguard:staging --digests
+                '''
+            }
+        }
+
+        stage('Deploy Staging Container') {
+            steps {
+                bat '''
+                    @echo off
                     echo ============================================================
+                    echo [STAGE: Deploy Staging Container]
+                    echo ============================================================
+                    powershell -ExecutionPolicy Bypass -File scripts\\deploy-staging-container.ps1 ^
+                        -ImageTag "claimguard:b%BUILD_NUMBER%" ^
+                        -ContainerName "%STAGING_CONTAINER%" ^
+                        -HostPort %STAGING_PORT% ^
+                        -ContainerPort %CONTAINER_PORT% ^
+                        -DockerBin "%DOCKER_BIN%" ^
+                        -DockerHost "%DOCKER_HOST%" ^
+                        -MaxHealthWaitSeconds 45
+                    if errorlevel 1 (
+                        echo [ERROR] Staging container deployment or health verification failed.
+                        exit /b 1
+                    )
+                    echo [SUCCESS] Staging container successfully deployed and verified on port %STAGING_PORT%.
                 '''
             }
         }
@@ -160,6 +207,8 @@ pipeline {
             echo '[PIPELINE SUCCESS] ClaimGuard Pipeline completed successfully!'
             echo '[PIPELINE SUCCESS] Verified: 11 Unit/MockMvc Tests + 6 Selenium E2E Tests'
             echo '[PIPELINE SUCCESS] Archived artifact: target/claimguard-dashboard-1.0.0-SNAPSHOT.jar'
+            echo '[PIPELINE SUCCESS] Deployed Docker Container: claimguard-staging on port 8083'
+            echo '[PIPELINE SUCCESS] Verified Endpoints: http://localhost:8083/api/health and http://localhost:8083/'
             echo '============================================================'
         }
         failure {

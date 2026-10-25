@@ -1,0 +1,29 @@
+# ==============================================================================
+# ClaimGuard Fraud Review Dashboard — Standalone College Demo Compose
+# Uses the verified candidate image claimguard:phase1-reconciled
+# ==============================================================================
+services:
+  claimguard-demo:
+    image: claimguard:phase1-reconciled
+    container_name: claimguard-demo-app
+    restart: unless-stopped
+    ports:
+      - "${DEMO_HOST_PORT:-8095}:8080"
+    environment:
+      - CLAIMGUARD_DB_PATH=${CLAIMGUARD_DB_PATH:-/app/data/claimguard}
+      - CLAIMGUARD_ADMIN_USERNAME=${CLAIMGUARD_ADMIN_USERNAME:-admin}
+      - CLAIMGUARD_ADMIN_PASSWORD=${CLAIMGUARD_ADMIN_PASSWORD:-DemoAdminSecret2026!}
+      - CLAIMGUARD_REVIEWER_USERNAME=${CLAIMGUARD_REVIEWER_USERNAME:-priya.sharma}
+      - CLAIMGUARD_REVIEWER_PASSWORD=${CLAIMGUARD_REVIEWER_PASSWORD:-DemoReviewerSecret2026!}
+    volumes:
+      - claimguard-demo-data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/api/health | grep '\"status\":\"UP\"' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+volumes:
+  claimguard-demo-data:
+    name: claimguard-demo-data

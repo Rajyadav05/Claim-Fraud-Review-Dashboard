@@ -4,12 +4,14 @@ import com.claimguard.dashboard.dto.ClaimDetailDTO;
 import com.claimguard.dashboard.dto.ClaimSummaryDTO;
 import com.claimguard.dashboard.dto.CreateClaimRequest;
 import com.claimguard.dashboard.dto.DocumentMetadataRequest;
+import com.claimguard.dashboard.dto.SuspiciousIndicatorDTO;
 import com.claimguard.dashboard.entity.*;
 import com.claimguard.dashboard.exception.InvalidStateTransitionException;
 import com.claimguard.dashboard.exception.ResourceNotFoundException;
 import com.claimguard.dashboard.repository.ClaimDocumentRepository;
 import com.claimguard.dashboard.repository.ClaimRepository;
 import com.claimguard.dashboard.repository.ReviewHistoryRepository;
+import com.claimguard.dashboard.repository.SuspiciousIndicatorRepository;
 import com.claimguard.dashboard.rules.IndicatorRuleEngine;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,15 +30,18 @@ public class ClaimService {
     private final ClaimRepository claimRepository;
     private final ClaimDocumentRepository documentRepository;
     private final ReviewHistoryRepository historyRepository;
+    private final SuspiciousIndicatorRepository indicatorRepository;
     private final IndicatorRuleEngine ruleEngine;
 
     public ClaimService(ClaimRepository claimRepository,
                         ClaimDocumentRepository documentRepository,
                         ReviewHistoryRepository historyRepository,
+                        SuspiciousIndicatorRepository indicatorRepository,
                         IndicatorRuleEngine ruleEngine) {
         this.claimRepository = claimRepository;
         this.documentRepository = documentRepository;
         this.historyRepository = historyRepository;
+        this.indicatorRepository = indicatorRepository;
         this.ruleEngine = ruleEngine;
     }
 
@@ -57,10 +62,13 @@ public class ClaimService {
         return ClaimDetailDTO.fromEntity(claim);
     }
 
-    public List<SuspiciousIndicator> getClaimIndicators(Long id) {
-        Claim claim = claimRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Claim with ID " + id + " not found."));
-        return claim.getSuspiciousIndicators();
+    public List<SuspiciousIndicatorDTO> getClaimIndicators(Long id) {
+        if (!claimRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Claim with ID " + id + " not found.");
+        }
+        return indicatorRepository.findByClaimId(id).stream()
+                .map(SuspiciousIndicatorDTO::fromEntity)
+                .toList();
     }
 
     public List<ReviewHistory> getClaimHistory(Long id) {

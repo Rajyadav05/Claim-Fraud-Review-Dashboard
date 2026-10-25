@@ -1,0 +1,56 @@
+# ==============================================================================
+# .dockerignore for ClaimGuard Fraud Review Dashboard
+# Excludes source code, docs, IDE artifacts, and secrets while preserving
+# the pre-built Spring Boot executable JAR in target/.
+# ==============================================================================
+
+# Version Control
+.git/
+.gitignore
+
+# IDE & Editor Files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.settings/
+.classpath
+.project
+
+# Maven Source and Build Cache (pre-built JAR workflow)
+.mvn/
+src/
+pom.xml
+mvnw
+mvnw.cmd
+
+# Build Artifacts: Ignore all target contents EXCEPT the production JAR
+target/*
+!target/claimguard-dashboard-1.0.0-SNAPSHOT.jar
+
+# Logs, PIDs, and Temp Files
+*.log
+logs/
+*.pid
+*.tmp
+
+# Secrets, Environment Files, and Keys
+*.env
+*.env.*
+*.secret
+*.pem
+*.key
+*.pfx
+*.jks
+
+# Documentation, Scripts, and CI Pipeline (Not needed inside container)
+docs/
+scripts/
+Jenkinsfile
+README.md
+
+# OS Artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
